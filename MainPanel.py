@@ -19,7 +19,13 @@ class MainPanel():
         # continues but messes up if users want to copy/paste from Burp into the
         # dialog.
         frm = EditDialog(self.callbacks, title="New Issue")
-        frm.display(self.panel)
+        frm.display(self)
+
+    def gotNewIssue(self, issue):
+        """got a new issue"""
+        print str(issue)
+        # change the index
+        self.jTable1.addRow(issue)
 
     # mostly converted generated code
     def __init__(self, callbacks, table=None):
@@ -37,9 +43,10 @@ class MainPanel():
         self.textPath = JTextField("Issue Path")
         self.tabIssue = JTabbedPane()
         self.textAreaDescription = JTextArea()
+        self.textAreaRemediation = JTextArea()
         self.panelRequest = self.callbacks.createMessageEditor(None, False)
         self.panelResponse = self.callbacks.createMessageEditor(None, False)
-        self.textAreaRemediation = JTextArea()
+
         # buttons
         self.buttonNewIssue = JButton("New Issue", actionPerformed=self.newIssueAction)
         self.buttonDeleteIssue = JButton("Delete Issue")
@@ -88,7 +95,7 @@ class MainPanel():
         self.panelResponse.setMessage("", False)
         self.tabIssue.addTab("Response", self.panelResponse.getComponent())
 
-        from java.lang import Short
+        # from java.lang import Short
         # jpanel1 is the bottom panel
         jPanel1Layout = GroupLayout(self.jPanel1)
         self.jPanel1.setLayout(jPanel1Layout)

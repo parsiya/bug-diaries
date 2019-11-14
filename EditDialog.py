@@ -4,9 +4,33 @@ from javax.swing import (JPanel, JLabel, JTextField, JTabbedPane, JPanel,
                          JTextField, JButton, JSplitPane, BorderFactory,
                          GroupLayout, JTextArea, JComboBox, LayoutStyle,
                          JDialog, WindowConstants)
-from java.lang import Short
 
-from burp import IBurpExtenderCallbacks
+from java.awt.event import ComponentListener
+
+
+class DialogListener (ComponentListener):
+    """ComponentListener for the EditDialog."""
+
+    def __init__(self, dialog):
+        """DialogListener constructor to save a reference to the dialog."""
+        self.dialog = dialog
+
+    def componentHidden(self, event):
+        """Invoked when the dialog is hidden."""
+        # hopefully this is the dialog
+        print "inside componentHidden"
+        # can also use self.dialog?
+        issue = self.dialog.issue
+        self.dialog.dlgParent.gotNewIssue(issue)
+
+    def componentMoved(self, event):
+        pass
+
+    def componentResized(self, event):
+        pass
+
+    def componentShown(self, event):
+        pass
 
 
 class EditDialog(JDialog):
@@ -18,14 +42,38 @@ class EditDialog(JDialog):
 
     def resetButtonAction(self, event):
         """Reset the dialog."""
-        self.revalidate()
-        # self.dispose()
-        # selt.setVisible(True)
+        # seems like we have to reset everything manually.
+        # another way it to iterate through self.getComponent()
+        # and reset based on type.
+        self.textAreaDescription.text = "Description"
+        self.textAreaRemediation.text = "Remediation"
+        self.textName.text = "Issue Type/Name"
+        self.textHost.text = "Issue Host"
+        self.textPath.text = "Issue Path"
+        self.panelRequest.setMessage("", True)
+        self.panelResponse.setMessage("", False)
+        self.comboSeverity.setSelectedIndex(-1)
+
+    def saveButtonAction(self, event):
+        """Save the current issue."""
+        from Issue import Issue
+        ist = Issue(index=-1, name=self.textName.text, host=self.textHost.text,
+                    path=self.textPath.text,
+                    description=self.textAreaDescription.text,
+                    remediation=self.textAreaRemediation.text,
+                    severity=str(self.comboSeverity.getSelectedItem()),
+                    request=str(self.panelRequest.getMessage()),
+                    response=str(self.panelResponse.getMessage()))
+        self.issue = ist
+        self.setVisible(False)
 
 
     def __init__(self, callbacks, title="", modality="", issue=None):
         """Constructor to populate the dialog with the new issue."""
         self.setTitle(title)
+
+        # holds the issue to be saved
+        self.issue = None
 
         if modality is not "":
             from java.awt.Dialog import ModalityType
@@ -40,7 +88,7 @@ class EditDialog(JDialog):
             if modality == "toolkit":
                 self.setModalityType(ModalityType.DOCUMENT_MODAL)
 
-        assert isinstance(callbacks, IBurpExtenderCallbacks)
+        # assert isinstance(callbacks, IBurpExtenderCallbacks)
         # starting converted code from NetBeans
         self.labelPath = JLabel("Path")
         self.labelSeverity = JLabel("Severity")
@@ -56,7 +104,8 @@ class EditDialog(JDialog):
         self.labelName = JLabel("Issue Type/Name")
 
         # buttons
-        self.buttonSave = JButton("Save")
+        self.buttonSave = JButton("Save",
+                                  actionPerformed=self.saveButtonAction)
         self.buttonCancel = JButton("Cancel",
                                     actionPerformed=self.cancelButtonAction)
         self.buttonReset = JButton("Reset",
@@ -77,8 +126,14 @@ class EditDialog(JDialog):
         self.panelResponse.setMessage("", False)
         self.tabIssue.addTab("Response", self.panelResponse.getComponent())
 
+        # TODO: Populate this from outside using a config file?
         self.comboSeverity = JComboBox(["Critical", "High", "Medium", "Low",
-                                        "Info"])
+        "Info"])
+        self.comboSeverity.setSelectedIndex(-1)
+
+        # add componentlistener
+        dlgListener = DialogListener(self)
+        self.addComponentListener(dlgListener)
 
         # "here be dragons" GUI code
         layout = GroupLayout(self.getContentPane())
@@ -152,6 +207,11 @@ class EditDialog(JDialog):
         self.pack()
         # setlocation must be AFTER pack
         # source: https://stackoverflow.com/a/22615038
-        self.setLocationRelativeTo(parent)
+        self.dlgParent = parent
+        self.setLocationRelativeTo(self.dlgParent.panel)
         # self.show()
         self.setVisible(True)
+
+    def getIssue(self):
+        """Returns the dialog issue."""
+        return self.issue
