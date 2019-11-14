@@ -6,6 +6,7 @@ from java.awt.event import MouseListener
 
 from Issue import Issue
 import java.lang
+import json
 
 
 class IssueTableModel(AbstractTableModel):
@@ -132,6 +133,11 @@ class IssueTableModel(AbstractTableModel):
             del self.issues[index]
             self.fireTableDataChanged()
         # otherwise do nothing.
+    
+    def issuesToJSON(self):
+        # type: () -> (str)
+        """Returns a JSON array of all issues."""
+        return json.dumps([iss.__dict__ for iss in self.issues], indent=4)
 
 
 class IssueTableMouseListener(MouseListener):
@@ -220,14 +226,20 @@ class IssueTable(JTable):
     # https://stackoverflow.com/a/17627497
 
     def getTableSelectedRow(self):
-        """Get the currently selected row.
         # type: () -> (int)
+        """Get the currently selected row.
         getSelectedRow() and selectedRow are already defined in JTable so I had
         to make one to adjust for the view sorting etc."""
         row = self.convertRowIndexToModel(self.getSelectedRow())
         return row
 
     def deleteRow(self, index):
+        # type: (int) -> ()
         """Deletes the row at index."""
         if index is not None:
             self.getModel().deleteIssue(index)
+    
+    def exportIssues(self):
+        # type: () -> (str)
+        """Returns a JSON array of all issues."""
+        return self.getModel().issuesToJSON()

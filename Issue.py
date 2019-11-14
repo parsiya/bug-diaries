@@ -52,8 +52,10 @@ class Issue():
     def JSON(self):
         """Returns the Issue in JSON."""
         import json
-        # TODO: Chande indent to 2
+        # TODO: Change indent to 2?
         # TODO: Also make it configurable in the extension config
+        # json.dumps(self.__dict__) without the indent, it returns an error
+        # that it's not serializable
         return json.dumps(self.__dict__, indent=4)
 
     def __str__(self):

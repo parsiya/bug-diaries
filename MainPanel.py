@@ -39,6 +39,10 @@ class MainPanel():
         self.jTable1.deleteRow(row)
         # it works!
 
+    def exportAction(self, event):
+        """Export everything in the table to a file."""
+        print self.jTable1.exportIssues()
+
     # mostly converted generated code
     def __init__(self, callbacks, table=None):
 
@@ -65,7 +69,7 @@ class MainPanel():
         self.buttonDeleteIssue = JButton("Delete Issue",
                                          actionPerformed=self.deleteIssueAction)
         self.buttonImport = JButton("Import")
-        self.buttonExport = JButton("Export")
+        self.buttonExport = JButton("Export", actionPerformed=self.exportAction)
 
         if table is not None:
             self.jTable1 = table
