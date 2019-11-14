@@ -28,7 +28,7 @@ class BurpExtender(IBurpExtender, ITab):
             pass
 
         # set our extension name
-        callbacks.setExtensionName("07-ObjectTableModel")
+        callbacks.setExtensionName("08-BugDiaries")
 
         # add the tab to Burp's UI
         callbacks.addSuiteTab(self)
@@ -41,7 +41,7 @@ class BurpExtender(IBurpExtender, ITab):
         """Burp uses this method to obtain the caption that should appear on the
         custom tab when it is displayed. Returns a string with the tab name.
         """
-        return "07-ObjectTableModel"
+        return "08-BugDiaries"
 
     def getUiComponent(self):
         """Burp uses this method to obtain the component that should be used as
@@ -53,18 +53,17 @@ class BurpExtender(IBurpExtender, ITab):
         # initial data in the table
         tableData = [
             # [3, "Issue3", "Severity3", "Host3", "Path3"],
-            [1, "Issue1", "Severity1", "Host1", "Path1", "Description1",
-             "Remediation1", "Request1", "Response1"],
+            ["Issue0", "Severity0", "Host0", "Path0", "Description0",
+             "Remediation0", "Request0", "Response0"],
             # [2, "Issue2", "Severity2", "Host2", "Path2"],
         ]
-        # tableHeadings = ["#", "Issue Type/Name", "Severity", "Host", "Path"]
         from IssueTable import IssueTable
         from Issue import Issue
         issues = list()
         for it in tableData:
-            tmpIssue = Issue(index=it[0], name=it[1], severity=it[2],host=it[3],
-                             path=it[4], description=it[5], remediation=it[6],
-                             request=it[7], response=it[8])
+            tmpIssue = Issue(name=it[0], severity=it[1],host=it[2],
+                             path=it[3], description=it[4], remediation=it[5],
+                             request=it[6], response=it[7])
             issues.append(tmpIssue)
 
         table = IssueTable(issues)

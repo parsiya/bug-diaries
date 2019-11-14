@@ -3,8 +3,6 @@ from base64 import b64decode, b64encode
 
 class Issue():
     """Issue represents one finding."""
-    # index of the finding in the table.
-    index = None  # type: int
     # issue name/type.
     name = ""  # type: str
     # severity: could be an enum but we will use a string to support custom
@@ -39,10 +37,9 @@ class Issue():
         """Base64 encode the response and store it."""
         self.response = b64encode(resp)
 
-    def __init__(self, index=None, name="", severity="", host="", path="",
+    def __init__(self, name="", severity="", host="", path="",
                  description="", remediation="", request="", response=""):
         """Create the issue."""
-        self.index = index
         self.name = name
         self.severity = severity
         self.host = host
@@ -51,3 +48,14 @@ class Issue():
         self.remediation = remediation
         self.setRequest(request)
         self.setResponse(response)
+
+    def JSON(self):
+        """Returns the Issue in JSON."""
+        import json
+        # TODO: Chande indent to 2
+        # TODO: Also make it configurable in the extension config
+        return json.dumps(self.__dict__, indent=4)
+
+    def __str__(self):
+        """Stringer for the Issue object."""
+        return str(self.JSON())

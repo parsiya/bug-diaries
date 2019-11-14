@@ -12,11 +12,11 @@ class IssueTableModel(AbstractTableModel):
     """Represents the extension's custom issue table. Extends the
     AbstractTableModel to make it readonly."""
     # column names
-    columnNames = ["#", "Issue Type/Name", "Severity", "Host", "Path"]
+    columnNames = ["Issue Type/Name", "Severity", "Host", "Path"]
     # column classes
 
-    columnClasses = [java.lang.Integer, java.lang.String, java.lang.String,
-                     java.lang.String, java.lang.String]
+    columnClasses = [java.lang.String, java.lang.String, java.lang.String,
+                     java.lang.String]
 
     issueList = list()
 
@@ -30,7 +30,6 @@ class IssueTableModel(AbstractTableModel):
             # from java.util import ArrayList
             # issues = ArrayList() - issues.add(whatever)
             self.issues = list()
-
 
     def getColumnCount(self):
         # type: () -> int
@@ -49,16 +48,15 @@ class IssueTableModel(AbstractTableModel):
             # is this going to come back and bite us in the back because we
             # are ignoring the hidden fields?
             issue = self.issues[row]
+            # print "inside getValueAt - " + "row: " + str(row) + " - column: " + str(column)
             assert isinstance(issue, Issue)
             if column == 0:
-                return issue.index
-            if column == 1:
                 return issue.name
-            if column == 2:
+            if column == 1:
                 return issue.severity
-            if column == 3:
+            if column == 2:
                 return issue.host
-            if column == 4:
+            if column == 3:
                 return issue.path
             return None
 
@@ -118,11 +116,16 @@ class IssueTableModel(AbstractTableModel):
     def addIssue(self, issue):
         # type: (Issue) -> ()
         """Adds the issue to the list of issues."""
-        # let's worry about manual indexing later?
+        # is issue is None == we have clicked "cancel" on the form
+        if issue is None:
+            return
         self.issues.append(issue)
+        # alert the table that something has changed.
+        # this is not ideal because we can just tell the table that some row
+        # have changed but this works for now.
         self.fireTableDataChanged()
 
-    def removeIssue(self, index):
+    def deleteIssue(self, index):
         # type: (int) -> ()
         """Removes the issue at index from the list of issues."""
         if 0 <= index < len(self.issues):
@@ -134,20 +137,8 @@ class IssueTableModel(AbstractTableModel):
 class IssueTableMouseListener(MouseListener):
     """Custom mouse listener to differentiate between single and double-clicks.
     """
-    def getClickedIndex(self, event):
-        """Returns the value of the first column of the table row that was
-        clicked. This is not the same as the row index because the table
-        can be sorted."""
-        # get the event source, the table in this case.
-        tbl = event.getSource()
-        # get the clicked row
-        row = tbl.convertRowIndexToModel(tbl.getSelectedRow())
-        # get the first value of clicked row
-        return tbl.getValueAt(row, 0)
-        # return event.getSource.getValueAt(event.getSource().getSelectedRow(), 0)
-
     def getClickedRow(self, event):
-        """Returns the complete clicked row."""
+        """Returns the clicked row."""
         tbl = event.getSource()
         mdl = tbl.getModel()
         row = tbl.convertRowIndexToModel(tbl.getSelectedRow())
@@ -166,7 +157,6 @@ class IssueTableMouseListener(MouseListener):
     # event.getClickCount() returns the number of clicks.
     def mouseClicked(self, event):
         if event.getClickCount() == 1:
-            # print "single-click. clicked index:", self.getClickedIndex(event)
             rowData = self.getClickedRow(event)
             assert isinstance(rowData, Issue)
 
@@ -185,7 +175,6 @@ class IssueTableMouseListener(MouseListener):
 
         if event.getClickCount() == 2:
             # open the dialog to edit
-            # print "double-click. clicked index:", self.getClickedIndex(event)
             # print "double-click"
             tbl = event.getSource()
             mdl = tbl.getModel()
@@ -194,7 +183,7 @@ class IssueTableMouseListener(MouseListener):
             print curRow
             # pop up the new frame
             # newRow = str(curRow+1)
-            # issue = Issue(index=newRow, name="Issue"+newRow,
+            # issue = Issue(name="Issue"+newRow,
             #               severity="Severity"+newRow, host="Host"+newRow,
             #               path="Path"+newRow, description="Description"+newRow,
             #               remediation="Remediation"+newRow,
@@ -229,3 +218,16 @@ class IssueTable(JTable):
 
     # solution to resize column width automagically
     # https://stackoverflow.com/a/17627497
+
+    def getTableSelectedRow(self):
+        """Get the currently selected row.
+        # type: () -> (int)
+        getSelectedRow() and selectedRow are already defined in JTable so I had
+        to make one to adjust for the view sorting etc."""
+        row = self.convertRowIndexToModel(self.getSelectedRow())
+        return row
+
+    def deleteRow(self, index):
+        """Deletes the row at index."""
+        if index is not None:
+            self.getModel().deleteIssue(index)

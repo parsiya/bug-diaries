@@ -17,9 +17,6 @@ class DialogListener (ComponentListener):
 
     def componentHidden(self, event):
         """Invoked when the dialog is hidden."""
-        # hopefully this is the dialog
-        print "inside componentHidden"
-        # can also use self.dialog?
         issue = self.dialog.issue
         self.dialog.dlgParent.gotNewIssue(issue)
 
@@ -45,11 +42,14 @@ class EditDialog(JDialog):
         # seems like we have to reset everything manually.
         # another way it to iterate through self.getComponent()
         # and reset based on type.
-        self.textAreaDescription.text = "Description"
-        self.textAreaRemediation.text = "Remediation"
+        self.textAreaDescription.text = ""
+        self.textAreaRemediation.text = ""
         self.textName.text = "Issue Type/Name"
+        self.textName.selectionStart = 0
         self.textHost.text = "Issue Host"
+        self.textHost.selectionStart = 0
         self.textPath.text = "Issue Path"
+        self.textPath.selectionStart = 0
         self.panelRequest.setMessage("", True)
         self.panelResponse.setMessage("", False)
         self.comboSeverity.setSelectedIndex(-1)
@@ -57,7 +57,7 @@ class EditDialog(JDialog):
     def saveButtonAction(self, event):
         """Save the current issue."""
         from Issue import Issue
-        ist = Issue(index=-1, name=self.textName.text, host=self.textHost.text,
+        ist = Issue(name=self.textName.text, host=self.textHost.text,
                     path=self.textPath.text,
                     description=self.textAreaDescription.text,
                     remediation=self.textAreaRemediation.text,
@@ -66,8 +66,7 @@ class EditDialog(JDialog):
                     response=str(self.panelResponse.getMessage()))
         self.issue = ist
         self.setVisible(False)
-
-
+    
     def __init__(self, callbacks, title="", modality="", issue=None):
         """Constructor to populate the dialog with the new issue."""
         self.setTitle(title)
@@ -97,9 +96,10 @@ class EditDialog(JDialog):
         self.textAreaRemediation = JTextArea()
         self.panelRequest = callbacks.createMessageEditor(None, False)
         self.panelResponse = callbacks.createMessageEditor(None, False)
-        self.textName = JTextField("Issue Type/Name")
-        self.textHost = JTextField("Issue Host")
-        self.textPath = JTextField("Issue Path")
+        # selectionStart=0 selects the text in the textfield when it is in focus
+        self.textName = JTextField("Issue Type/Name", selectionStart=0)
+        self.textHost = JTextField("Issue Host", selectionStart=0)
+        self.textPath = JTextField("Issue Path", selectionStart=0)
         self.labelHost = JLabel("Host")
         self.labelName = JLabel("Issue Type/Name")
 
@@ -121,7 +121,6 @@ class EditDialog(JDialog):
         # request tab
         self.panelRequest.setMessage("", True)
         self.tabIssue.addTab("Request", self.panelRequest.getComponent())
-
         # response tab
         self.panelResponse.setMessage("", False)
         self.tabIssue.addTab("Response", self.panelResponse.getComponent())

@@ -23,9 +23,21 @@ class MainPanel():
 
     def gotNewIssue(self, issue):
         """got a new issue"""
-        print str(issue)
-        # change the index
+        # print str(issue)
         self.jTable1.addRow(issue)
+    
+    def deleteIssueAction(self, event):
+        """Delete the currently selected issue."""
+        # this is the button
+        # btn = event.getSource()
+        # print "self.jTable1.selectedRow(): " + str(self.jTable1.getTableSelectedRow())
+        # print "self.jTable1.getModel().issues(self.jTable1.getTableSelectedRow()): " + str(self.jTable1.getModel().issues[self.jTable1.getTableSelectedRow()])
+        # seems like this is working
+        # let's try and delete something
+        row = self.jTable1.getTableSelectedRow()
+        # YOLO
+        self.jTable1.deleteRow(row)
+        # it works!
 
     # mostly converted generated code
     def __init__(self, callbacks, table=None):
@@ -48,8 +60,10 @@ class MainPanel():
         self.panelResponse = self.callbacks.createMessageEditor(None, False)
 
         # buttons
-        self.buttonNewIssue = JButton("New Issue", actionPerformed=self.newIssueAction)
-        self.buttonDeleteIssue = JButton("Delete Issue")
+        self.buttonNewIssue = JButton("New Issue",
+                                      actionPerformed=self.newIssueAction)
+        self.buttonDeleteIssue = JButton("Delete Issue",
+                                         actionPerformed=self.deleteIssueAction)
         self.buttonImport = JButton("Import")
         self.buttonExport = JButton("Export")
 
