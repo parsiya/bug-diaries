@@ -62,8 +62,8 @@ class EditDialog(JDialog):
                     description=self.textAreaDescription.text,
                     remediation=self.textAreaRemediation.text,
                     severity=str(self.comboSeverity.getSelectedItem()),
-                    request=str(self.panelRequest.getMessage()),
-                    response=str(self.panelResponse.getMessage()))
+                    request=self.panelRequest.getMessage(),
+                    response=self.panelResponse.getMessage())
         self.issue = ist
         self.setVisible(False)
     
@@ -94,8 +94,8 @@ class EditDialog(JDialog):
         self.tabIssue = JTabbedPane()
         self.textAreaDescription = JTextArea()
         self.textAreaRemediation = JTextArea()
-        self.panelRequest = callbacks.createMessageEditor(None, False)
-        self.panelResponse = callbacks.createMessageEditor(None, False)
+        self.panelRequest = callbacks.createMessageEditor(None, True)
+        self.panelResponse = callbacks.createMessageEditor(None, True)
         # selectionStart=0 selects the text in the textfield when it is in focus
         self.textName = JTextField("Issue Type/Name", selectionStart=0)
         self.textHost = JTextField("Issue Host", selectionStart=0)
