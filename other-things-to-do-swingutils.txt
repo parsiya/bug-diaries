@@ -1,3 +1,5 @@
 # Burp extension to test swingutils. https://github.com/jython/swingutils.
 # is it still used or are we better off making our own or using something else?
 # creates a listener and prints information about incoming requests.
+
+# create a running log of what's happening?
