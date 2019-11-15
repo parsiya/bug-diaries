@@ -41,7 +41,49 @@ class MainPanel():
 
     def exportAction(self, event):
         """Export everything in the table to a file."""
-        print self.jTable1.exportIssues()
+        # create a file chooser
+        # TOOD: Later, use the extension config to select the last used directory.
+        # try to load the last used directory
+        lastDir = ""
+        try:
+            # load the last used directory
+            # this will probably change as we will use a base64 encoded json as the complete config?
+            lastDir = self.callbacks.loadExtensionSetting("lastDir")
+        except:
+            # if there is not directory, continue
+            pass
+
+        # make this a function tbh.
+        from javax.swing import JFileChooser
+        fileChooser = JFileChooser(lastDir)
+        # print str(dir(fileChooser))
+        fileChooser.dialogTitle = "Export Issues"
+        # FileNameExtensionFilter
+        # https://docs.oracle.com/javase/8/docs/api/javax/swing/filechooser/FileNameExtensionFilter.html
+        # is this needed?
+        from javax.swing.filechooser import FileNameExtensionFilter
+        fil = FileNameExtensionFilter("JSON Files (*.json)", ["json"])
+        fileChooser.fileFilter = fil
+        # add file filter
+        fileChooser.addChoosableFileFilter(fil)
+        fileChooser.fileSelectionMode = JFileChooser.FILES_ONLY
+        # https://docs.oracle.com/javase/7/docs/api/javax/swing/JFileChooser.html#showSaveDialog(java.awt.Component)
+        returnVal = fileChooser.showSaveDialog(self.panel)
+        # showOpenDialog for the import button
+        if returnVal != JFileChooser.APPROVE_OPTION:
+            # export cancelled or there was an error
+            return
+
+        # store the used directory
+        lastDir = fileChooser.getCurrentDirectory().toString()
+        self.callbacks.saveExtensionSetting("lastDir", lastDir)
+        # get file path
+        selectedFile = fileChooser.getSelectedFile().getAbsolutePath()
+        from os.path import splitext
+        filename, ext = splitext(selectedFile)
+        print "selectedFile - name: " + filename + " extension: " + ext
+
+        # print self.jTable1.exportIssues()
 
     # mostly converted generated code
     def __init__(self, callbacks, table=None):
