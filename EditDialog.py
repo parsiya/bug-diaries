@@ -6,7 +6,7 @@ from javax.swing import (JPanel, JLabel, JTextField, JTabbedPane, JPanel,
                          JDialog, WindowConstants)
 
 from java.awt.event import ComponentListener
-
+from Issue import Issue
 
 class DialogListener (ComponentListener):
     """ComponentListener for the EditDialog."""
@@ -33,30 +33,54 @@ class DialogListener (ComponentListener):
 class EditDialog(JDialog):
     """Represents the dialog used to edit issues or add new ones."""
 
+    defaultIssue = Issue(
+        name="Issue Type/Name",
+        severity="Critical",
+        host="Issue Host",
+        path="Issue Path",
+        description="Description",
+        remediation="",
+        request="",
+        response=""
+    )
+
     def cancelButtonAction(self, event):
         """Close the dialog when the cancel button is clicked."""
         self.dispose()
 
+    def loadPanel(self, issue):
+        # type: (Issue) -> ()
+        """Populates the panel with issue."""
+        if issue is None:
+            return
+        
+        # check if the input is the correct object
+        assert isinstance(issue, Issue)
+
+        # set textfields and textareas
+        self.textName.text = issue.name
+        self.textName.selectionStart = 0
+        self.textHost.text = issue.host
+        self.textHost.selectionStart = 0
+        self.textPath.text = issue.path
+        self.textPath.selectionStart = 0
+        self.textAreaDescription.text = issue.description
+        self.textAreaDescription.selectionStart = 0
+        self.textAreaRemediation.text = issue.remediation
+        self.textAreaRemediation.selectionStart = 0
+        # severity combobox
+        # this is case-sensitive apparently
+        self.comboSeverity.setSelectedItem(issue.severity)
+        # request and response tabs
+        self.panelRequest.setMessage(issue.getRequest(), True)
+        self.panelResponse.setMessage(issue.getResponse(), False)
+
     def resetButtonAction(self, event):
         """Reset the dialog."""
-        # seems like we have to reset everything manually.
-        # another way it to iterate through self.getComponent()
-        # and reset based on type.
-        self.textAreaDescription.text = ""
-        self.textAreaRemediation.text = ""
-        self.textName.text = "Issue Type/Name"
-        self.textName.selectionStart = 0
-        self.textHost.text = "Issue Host"
-        self.textHost.selectionStart = 0
-        self.textPath.text = "Issue Path"
-        self.textPath.selectionStart = 0
-        self.panelRequest.setMessage("", True)
-        self.panelResponse.setMessage("", False)
-        self.comboSeverity.setSelectedIndex(-1)
+        self.loadPanel(self.defaultIssue)
 
     def saveButtonAction(self, event):
         """Save the current issue."""
-        from Issue import Issue
         ist = Issue(name=self.textName.text, host=self.textHost.text,
                     path=self.textPath.text,
                     description=self.textAreaDescription.text,
@@ -67,7 +91,8 @@ class EditDialog(JDialog):
         self.issue = ist
         self.setVisible(False)
     
-    def __init__(self, callbacks, title="", modality="", issue=None):
+    def __init__(self, callbacks, title="", modality="",
+                 issue=defaultIssue):
         """Constructor to populate the dialog with the new issue."""
         self.setTitle(title)
 
@@ -97,9 +122,9 @@ class EditDialog(JDialog):
         self.panelRequest = callbacks.createMessageEditor(None, True)
         self.panelResponse = callbacks.createMessageEditor(None, True)
         # selectionStart=0 selects the text in the textfield when it is in focus
-        self.textName = JTextField("Issue Type/Name", selectionStart=0)
-        self.textHost = JTextField("Issue Host", selectionStart=0)
-        self.textPath = JTextField("Issue Path", selectionStart=0)
+        self.textName = JTextField()
+        self.textHost = JTextField()
+        self.textPath = JTextField()
         self.labelHost = JLabel("Host")
         self.labelName = JLabel("Issue Type/Name")
 
@@ -126,6 +151,7 @@ class EditDialog(JDialog):
         self.tabIssue.addTab("Response", self.panelResponse.getComponent())
 
         # TODO: Populate this from outside using a config file?
+        # or perhaps the extension config
         self.comboSeverity = JComboBox(["Critical", "High", "Medium", "Low",
         "Info"])
         self.comboSeverity.setSelectedIndex(-1)
@@ -133,6 +159,13 @@ class EditDialog(JDialog):
         # add componentlistener
         dlgListener = DialogListener(self)
         self.addComponentListener(dlgListener)
+
+        # add the issue in the parameter to the field
+        # we are doing some of the work twice but it's ok.
+        if issue is not None:
+            # make sure it's the correct object
+            assert isinstance(issue, Issue)
+            self.loadPanel(issue)
 
         # "here be dragons" GUI code
         layout = GroupLayout(self.getContentPane())
