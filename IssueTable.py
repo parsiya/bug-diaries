@@ -92,7 +92,6 @@ class IssueTableModel(AbstractTableModel):
         # this is going to come and bite me in the back, isn't it?
         return self.issues[0]
 
-
     # # is this needed for a readonly table?
     # def setValueAt(self, value, row, column):
     #     # type: (object, int, int) -> ()
@@ -138,7 +137,19 @@ class IssueTableModel(AbstractTableModel):
         # type: () -> (str)
         """Returns a JSON array of all issues."""
         return json.dumps([iss.__dict__ for iss in self.issues], indent=4)
-
+    
+    def clear(self):
+        # type: () -> ()
+        """Clears the table model."""
+        # list.clear() was introduced in Python 3.3, not available here.
+        # self.issues.clear()
+        self.issues = list()
+        self.fireTableDataChanged()
+        
+    def populate(self, issues):
+        # type (list(Issue)) -> ()
+        """Populates self.issues with issues and erases existing data."""
+        self.issues = issues
 
 class IssueTableMouseListener(MouseListener):
     """Custom mouse listener to differentiate between single and double-clicks.
@@ -186,17 +197,7 @@ class IssueTableMouseListener(MouseListener):
             mdl = tbl.getModel()
             assert isinstance(mdl, IssueTableModel)
             curRow = mdl.getRowCount()
-            print curRow
-            # pop up the new frame
-            # newRow = str(curRow+1)
-            # issue = Issue(name="Issue"+newRow,
-            #               severity="Severity"+newRow, host="Host"+newRow,
-            #               path="Path"+newRow, description="Description"+newRow,
-            #               remediation="Remediation"+newRow,
-            #               request="Request"+newRow, response="Response"+newRow)
-            # tbl.addRow(issue)
-            # print "issue(request) stored:", issue.request
-
+            # edit the issue?
 
     def mouseEntered(self, event):
         pass
@@ -217,10 +218,11 @@ class IssueTable(JTable):
         self.getTableHeader().setReorderingAllowed(False)
         # assign panel to a field
         self.addMouseListener(IssueTableMouseListener())
+        self.model = self.getModel()
 
     def addRow(self, issue):
         """Add a new row to the tablemodel."""
-        self.getModel().addIssue(issue)
+        self.model.addIssue(issue)
 
     # solution to resize column width automagically
     # https://stackoverflow.com/a/17627497
@@ -237,9 +239,19 @@ class IssueTable(JTable):
         # type: (int) -> ()
         """Deletes the row at index."""
         if index is not None:
-            self.getModel().deleteIssue(index)
+            self.model.deleteIssue(index)
     
     def exportIssues(self):
         # type: () -> (str)
         """Returns a JSON array of all issues."""
-        return self.getModel().issuesToJSON()
+        return self.model.issuesToJSON()
+    
+    def clear(self):
+        # type: () -> ()
+        """Clears the table and removes all issues."""
+        self.model.clear()
+    
+    def populate(self, issues):
+        # type: (list(Issue)) -> ()
+        """Populates in the table with the issues and removes existing data."""
+        self.model.populate(issues)

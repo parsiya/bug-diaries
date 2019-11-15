@@ -86,3 +86,30 @@ def openFileDialog(parent, startingDir=None, title=None, extension=None):
     # get file path
     selectedFile = fileChooser.getSelectedFile()
     return selectedFile, lastDir
+
+def writeFile(file, data):
+    # type: (str, str) -> ()
+    """Writes data to file."""
+    # write to the file
+    if file is None:
+        return
+
+    writeFile = open(file, "w")
+    writeFile.write(data)
+    writeFile.close()
+
+def readFile(file):
+    # type: (str) -> (str)
+    """Reads strings from a file."""
+    if file is None:
+        return None
+    
+    readFile = open(file, "r")
+    return readFile.read()
+
+def dictToIssue(d):
+    """Returns an Issue from a dictionary."""
+    from Issue import Issue
+    iss = Issue()
+    iss.__dict__ = d
+    return iss

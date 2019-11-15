@@ -24,19 +24,19 @@ class MainPanel():
     def gotNewIssue(self, issue):
         """got a new issue"""
         # print str(issue)
-        self.jTable1.addRow(issue)
+        self.tableIssue.addRow(issue)
     
     def deleteIssueAction(self, event):
         """Delete the currently selected issue."""
         # this is the button
         # btn = event.getSource()
-        # print "self.jTable1.selectedRow(): " + str(self.jTable1.getTableSelectedRow())
-        # print "self.jTable1.getModel().issues(self.jTable1.getTableSelectedRow()): " + str(self.jTable1.getModel().issues[self.jTable1.getTableSelectedRow()])
+        # print "self.tableIssue.selectedRow(): " + str(self.tableIssue.getTableSelectedRow())
+        # print "self.tableIssue.getModel().issues(self.tableIssue.getTableSelectedRow()): " + str(self.tableIssue.getModel().issues[self.tableIssue.getTableSelectedRow()])
         # seems like this is working
         # let's try and delete something
-        row = self.jTable1.getTableSelectedRow()
+        row = self.tableIssue.getTableSelectedRow()
         # YOLO
-        self.jTable1.deleteRow(row)
+        self.tableIssue.deleteRow(row)
         # it works!
 
     def exportAction(self, event):
@@ -50,15 +50,14 @@ class MainPanel():
             # if there is not a last used directory in the settings, continue
             pass
 
-        from Utils import saveFileDialog
+        from Utils import saveFileDialog, writeFile
         selectedFile, usedDirectory = saveFileDialog(parent=self.panel,
             startingDir=lastDir, title="Export Issues", extension="json")
         
         if selectedFile is not None:
             # write to the file
-            writeFile = open(selectedFile.getAbsolutePath(), "w")
-            writeFile.write(self.jTable1.exportIssues())
-            writeFile.close()
+            writeFile(selectedFile().getAbsolutePath(),
+                      self.tableIssue.exportIssues())
         
         if usedDirectory is not None:
             # overwrite the last used directory
@@ -75,13 +74,22 @@ class MainPanel():
             # if there is not a last used directory in the settings, continue
             pass
         
-        from Utils import openFileDialog
+        from Utils import openFileDialog, dictToIssue
         selectedFile, usedDirectory = openFileDialog(parent=self.panel,
             startingDir=lastDir, title="Import Issues", extension="json")
         
-        print selectedFile.getAbsolutePath()
-        print usedDirectory
-
+        # save the last directory
+        self.callbacks.saveExtensionSetting("lastDir", usedDirectory)
+        import json
+        fi = open(selectedFile.getAbsolutePath(), "r")
+        # read the file and create a list of Issues
+        newIssues = json.load(fi, object_hook=dictToIssue)
+        # clear the table
+        self.tableIssue.clear()
+        # add the issues to the table
+        # for iss in newIssues:
+        #     self.tableIssue.addRow(iss)
+        self.tableIssue.populate(newIssues)
 
     # mostly converted generated code
     def __init__(self, callbacks, table=None):
@@ -112,13 +120,13 @@ class MainPanel():
         self.buttonExport = JButton("Export", actionPerformed=self.exportAction)
 
         if table is not None:
-            self.jTable1 = table
+            self.tableIssue = table
         else:
             from IssueTable import IssueTable
-            self.jTable1 = IssueTable()
+            self.tableIssue = IssueTable()
 
         # wrap the table in a scrollpane
-        self.jScrollPane1.setViewportView(self.jTable1)
+        self.jScrollPane1.setViewportView(self.tableIssue)
 
         # top panel containing the table
         from java.awt import Color
