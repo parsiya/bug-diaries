@@ -3,10 +3,42 @@
 from javax.swing import (JScrollPane, JTable, JPanel, JTextField, JLabel,
                          JTabbedPane, table, BorderFactory, GroupLayout,
                          LayoutStyle, JFrame, JTextArea, JSplitPane, JButton)
-
+from Issue import Issue
 
 class MainPanel():
     """Represents the converted frame from NetBeans."""
+
+    defaultIssue = Issue(
+        name="Issue Type/Name",
+        severity="Critical",
+        host="Issue Host",
+        path="Issue Path",
+        description="Description",
+        remediation="",
+        request="",
+        response=""
+    )
+
+    def loadPanel(self, issue):
+        # type: (Issue) -> ()
+        """Populates the panel with issue."""
+        if issue is None:
+            return
+        
+        # check if the input is the correct object
+        assert isinstance(issue, Issue)
+
+        # set textfields and textareas
+        self.textName.text = issue.name
+        self.textHost.text = issue.host
+        self.textPath.text = issue.path
+        self.textAreaDescription.text = issue.description
+        self.textAreaRemediation.text = issue.remediation
+        self.textSeverity.text = issue.severity
+        # request and response tabs
+        self.panelRequest.setMessage(issue.getRequest(), True)
+        self.panelResponse.setMessage(issue.getResponse(), False)
+
 
     # button actions
     def newIssueAction(self, event):
@@ -30,9 +62,6 @@ class MainPanel():
         """Delete the currently selected issue."""
         # this is the button
         # btn = event.getSource()
-        # print "self.tableIssue.selectedRow(): " + str(self.tableIssue.getTableSelectedRow())
-        # print "self.tableIssue.getModel().issues(self.tableIssue.getTableSelectedRow()): " + str(self.tableIssue.getModel().issues[self.tableIssue.getTableSelectedRow()])
-        # seems like this is working
         # let's try and delete something
         row = self.tableIssue.getTableSelectedRow()
         # YOLO
@@ -98,18 +127,20 @@ class MainPanel():
         self.jScrollPane1 = JScrollPane()
         self.jPanel1 = JPanel()
         self.labelName = JLabel("Issue Type/Name")
-        self.textName = JTextField("Issue Type/Name")
+        self.textName = JTextField()
         self.labelSeverity = JLabel("Severity")
-        self.textSeverity = JTextField("Severity")
+        self.textSeverity = JTextField()
         self.labelHost = JLabel("Host")
         self.labelPath = JLabel("Path")
-        self.textHost = JTextField("Issue Host")
-        self.textPath = JTextField("Issue Path")
+        self.textHost = JTextField()
+        self.textPath = JTextField()
         self.tabIssue = JTabbedPane()
         self.textAreaDescription = JTextArea()
         self.textAreaRemediation = JTextArea()
         self.panelRequest = self.callbacks.createMessageEditor(None, False)
         self.panelResponse = self.callbacks.createMessageEditor(None, False)
+
+        self.loadPanel(self.defaultIssue)
 
         # buttons
         self.buttonNewIssue = JButton("New Issue",

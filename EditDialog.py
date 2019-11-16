@@ -18,7 +18,11 @@ class DialogListener (ComponentListener):
     def componentHidden(self, event):
         """Invoked when the dialog is hidden."""
         issue = self.dialog.issue
-        self.dialog.dlgParent.gotNewIssue(issue)
+        if self.dialog.mode == "edit":
+            pass
+        else:
+            # new issue
+            self.dialog.dlgParent.gotNewIssue(issue)
 
     def componentMoved(self, event):
         pass
@@ -43,10 +47,6 @@ class EditDialog(JDialog):
         request="",
         response=""
     )
-
-    def cancelButtonAction(self, event):
-        """Close the dialog when the cancel button is clicked."""
-        self.dispose()
 
     def loadPanel(self, issue):
         # type: (Issue) -> ()
@@ -74,6 +74,10 @@ class EditDialog(JDialog):
         # request and response tabs
         self.panelRequest.setMessage(issue.getRequest(), True)
         self.panelResponse.setMessage(issue.getResponse(), False)
+
+    def cancelButtonAction(self, event):
+        """Close the dialog when the cancel button is clicked."""
+        self.dispose()
 
     def resetButtonAction(self, event):
         """Reset the dialog."""
@@ -165,6 +169,7 @@ class EditDialog(JDialog):
         if issue is not None:
             # make sure it's the correct object
             assert isinstance(issue, Issue)
+            self.mode = "edit"
             self.loadPanel(issue)
 
         # "here be dragons" GUI code

@@ -181,14 +181,16 @@ class IssueTableMouseListener(MouseListener):
             # import burpPanel to modify it
             from MainPanel import burpPanel, MainPanel
             assert isinstance(burpPanel, MainPanel)
-            burpPanel.textName.text = rowData.name
-            burpPanel.textSeverity.text = rowData.severity
-            burpPanel.textHost.text = rowData.host
-            burpPanel.textPath.text = rowData.path
-            burpPanel.textAreaDescription.text = rowData.description
-            burpPanel.textAreaRemediation.text = rowData.remediation
-            burpPanel.panelRequest.setMessage(rowData.getRequest(), True)
-            burpPanel.panelResponse.setMessage(rowData.getResponse(), False)
+            if rowData is not None:
+                burpPanel.loadPanel(rowData)
+            # burpPanel.textName.text = rowData.name
+            # burpPanel.textSeverity.text = rowData.severity
+            # burpPanel.textHost.text = rowData.host
+            # burpPanel.textPath.text = rowData.path
+            # burpPanel.textAreaDescription.text = rowData.description
+            # burpPanel.textAreaRemediation.text = rowData.remediation
+            # burpPanel.panelRequest.setMessage(rowData.getRequest(), True)
+            # burpPanel.panelResponse.setMessage(rowData.getResponse(), False)
 
         if event.getClickCount() == 2:
             # open the dialog to edit
@@ -196,7 +198,14 @@ class IssueTableMouseListener(MouseListener):
             tbl = event.getSource()
             mdl = tbl.getModel()
             assert isinstance(mdl, IssueTableModel)
-            curRow = mdl.getRowCount()
+            currentIssue = self.getClickedRow(event)
+            # currentIssue.name = "whatever"
+            from EditDialog import EditDialog
+            frm = EditDialog(self.callbacks, title=currentIssue.name,
+                             issue=currentIssue)
+            frm.display(burpPanel.panel)
+
+
             # edit the issue?
 
     def mouseEntered(self, event):
