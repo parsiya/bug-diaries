@@ -8,7 +8,7 @@ from javax.swing import (JPanel, JLabel, JTextField, JTabbedPane, JPanel,
 from java.awt.event import ComponentListener
 from Issue import Issue
 
-class DialogListener (ComponentListener):
+class DialogListener(ComponentListener):
     """ComponentListener for the EditDialog."""
 
     def __init__(self, dialog):
@@ -18,8 +18,12 @@ class DialogListener (ComponentListener):
     def componentHidden(self, event):
         """Invoked when the dialog is hidden."""
         issue = self.dialog.issue
+
         if self.dialog.mode == "edit":
-            pass
+            # edit the issue
+            index = issue.index
+            delattr(issue, 'index') 
+            self.dialog.dlgParent.editIssue(index, issue)
         else:
             # new issue
             self.dialog.dlgParent.gotNewIssue(issue)
@@ -93,6 +97,9 @@ class EditDialog(JDialog):
                     request=self.panelRequest.getMessage(),
                     response=self.panelResponse.getMessage())
         self.issue = ist
+        if self.mode == "edit":
+            # if it's in edit mode, pass the index
+            self.issue.index = self.index
         self.setVisible(False)
     
     def __init__(self, callbacks, title="", modality="",
@@ -101,7 +108,9 @@ class EditDialog(JDialog):
         self.setTitle(title)
 
         # holds the issue to be saved
-        self.issue = None
+        self.issue = issue
+        # default mode is new
+        self.mode = "new"
 
         if modality is not "":
             from java.awt.Dialog import ModalityType
@@ -164,12 +173,19 @@ class EditDialog(JDialog):
         dlgListener = DialogListener(self)
         self.addComponentListener(dlgListener)
 
+        if issue is None:
+            issue = self.defaultIssue
+        
+        # load the issue into the edit dialog.
+        self.loadPanel(issue)
+
         # add the issue in the parameter to the field
         # we are doing some of the work twice but it's ok.
-        if issue is not None:
+        if issue is not None and issue is not self.defaultIssue:
             # make sure it's the correct object
             assert isinstance(issue, Issue)
             self.mode = "edit"
+            self.index = issue.index
             self.loadPanel(issue)
 
         # "here be dragons" GUI code

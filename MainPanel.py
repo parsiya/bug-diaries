@@ -55,8 +55,11 @@ class MainPanel():
 
     def gotNewIssue(self, issue):
         """got a new issue"""
-        # print str(issue)
         self.tableIssue.addRow(issue)
+    
+    def editIssue(self, index, issue):
+        """Issue has been edited."""
+        self.tableIssue.editRow(index, issue)
     
     def deleteIssueAction(self, event):
         """Delete the currently selected issue."""
@@ -85,7 +88,7 @@ class MainPanel():
         
         if selectedFile is not None:
             # write to the file
-            writeFile(selectedFile().getAbsolutePath(),
+            writeFile(selectedFile.getAbsolutePath(),
                       self.tableIssue.exportIssues())
         
         if usedDirectory is not None:

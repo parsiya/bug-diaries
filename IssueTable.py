@@ -131,8 +131,22 @@ class IssueTableModel(AbstractTableModel):
         if 0 <= index < len(self.issues):
             del self.issues[index]
             self.fireTableDataChanged()
+        else:
+            print "deleteIssue called with invalid index: " + str(index)
         # otherwise do nothing.
     
+    def editIssue(self, index, issue):
+        # type: (int, Issue) -> ()
+        """Edits the issue at index with issue."""
+        if issue is not None:
+            if 0 <= index < len(self.issues):
+                self.issues[index] = issue
+                self.fireTableDataChanged()
+            else:
+                print "editIssue called with invalid index: " + str(index)
+        else:
+            print "editIssue called with None issue"
+
     def issuesToJSON(self):
         # type: () -> (str)
         """Returns a JSON array of all issues."""
@@ -196,14 +210,15 @@ class IssueTableMouseListener(MouseListener):
             # open the dialog to edit
             # print "double-click"
             tbl = event.getSource()
-            mdl = tbl.getModel()
-            assert isinstance(mdl, IssueTableModel)
             currentIssue = self.getClickedRow(event)
-            # currentIssue.name = "whatever"
             from EditDialog import EditDialog
-            frm = EditDialog(self.callbacks, title=currentIssue.name,
+            from MainPanel import burpPanel
+            # add a new attribute to currentIssue to hold the index
+            currentIssue.index = tbl.getTableSelectedRow()
+            frm = EditDialog(burpPanel.callbacks,
+                             title="Edit " + currentIssue.name,
                              issue=currentIssue)
-            frm.display(burpPanel.panel)
+            frm.display(burpPanel)
 
 
             # edit the issue?
@@ -249,6 +264,10 @@ class IssueTable(JTable):
         """Deletes the row at index."""
         if index is not None:
             self.model.deleteIssue(index)
+    
+    def editRow(self, index, issue):
+        """Edits the row at index."""
+        self.model.editIssue(index, issue)
     
     def exportIssues(self):
         # type: () -> (str)
