@@ -28,7 +28,7 @@ class BurpExtender(IBurpExtender, ITab):
             pass
 
         # set our extension name
-        callbacks.setExtensionName("08-BugDiaries")
+        callbacks.setExtensionName("Bug Diaries")
 
         # add the tab to Burp's UI
         callbacks.addSuiteTab(self)
@@ -41,7 +41,7 @@ class BurpExtender(IBurpExtender, ITab):
         """Burp uses this method to obtain the caption that should appear on the
         custom tab when it is displayed. Returns a string with the tab name.
         """
-        return "08-BugDiaries"
+        return "Bug Diaries"
 
     def getUiComponent(self):
         """Burp uses this method to obtain the component that should be used as
