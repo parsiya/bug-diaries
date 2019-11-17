@@ -238,6 +238,3 @@ class BugDialog(JDialog):
         # self.show()
         self.setVisible(True)
 
-    def getIssue(self):
-        """Returns the dialog issue."""
-        return self.issue

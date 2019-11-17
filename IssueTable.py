@@ -176,7 +176,6 @@ class IssueTableMouseListener(MouseListener):
         row = tbl.convertRowIndexToModel(tbl.getSelectedRow())
         assert isinstance(mdl, IssueTableModel)
         return mdl.getIssue(row)
-        # return tbl.getModel().getDataVector().elementAt()
 
     def mousePressed(self, event):
         # print "mouse pressed", event.getClickCount()
@@ -198,14 +197,6 @@ class IssueTableMouseListener(MouseListener):
             assert isinstance(burpPanel, MainPanel)
             if rowData is not None:
                 burpPanel.loadPanel(rowData)
-            # burpPanel.textName.text = rowData.name
-            # burpPanel.textSeverity.text = rowData.severity
-            # burpPanel.textHost.text = rowData.host
-            # burpPanel.textPath.text = rowData.path
-            # burpPanel.textAreaDescription.text = rowData.description
-            # burpPanel.textAreaRemediation.text = rowData.remediation
-            # burpPanel.panelRequest.setMessage(rowData.getRequest(), True)
-            # burpPanel.panelResponse.setMessage(rowData.getResponse(), False)
 
         if event.getClickCount() == 2:
             # open the dialog to edit
@@ -261,10 +252,22 @@ class IssueTable(JTable):
         return row
 
     def deleteRow(self, index):
+        from MainPanel import burpPanel
         # type: (int) -> ()
         """Deletes the row at index."""
         if index is not None:
             self.model.deleteIssue(index)
+        # if table is not empty, select the last row
+        lastRow = self.model.getRowCount() - 1
+        if lastRow >= 0:
+            # select the last row
+            self.setRowSelectionInterval(lastRow, lastRow)
+            # update the panel
+            burpPanel.loadPanel(self.model.getIssue(lastRow))
+        else:
+            # table is now empty
+            # update the panel with the default text
+            burpPanel.loadPanel(burpPanel.defaultIssue)
     
     def editRow(self, index, issue):
         """Edits the row at index."""
