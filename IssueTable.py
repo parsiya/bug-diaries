@@ -164,6 +164,7 @@ class IssueTableModel(AbstractTableModel):
         # type (list(Issue)) -> ()
         """Populates self.issues with issues and erases existing data."""
         self.issues = issues
+        self.fireTableDataChanged()
 
 class IssueTableMouseListener(MouseListener):
     """Custom mouse listener to differentiate between single and double-clicks.

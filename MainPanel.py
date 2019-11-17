@@ -42,15 +42,9 @@ class MainPanel():
 
     # button actions
     def newIssueAction(self, event):
-        """Pops up a frame."""
-        # print str(event)
-        from EditDialog import EditDialog
-        # modality="application" blocks all of Burp which may or may not be a
-        # good thing for your usecase.
-        # it helps if you want to make sure the dialog is closed before the user
-        # continues but messes up if users want to copy/paste from Burp into the
-        # dialog.
-        frm = EditDialog(self.callbacks, title="New Issue")
+        """Pops up a frame to add a new issue."""
+        from NewIssueDialog import NewIssueDialog
+        frm = NewIssueDialog(self.callbacks, "New Issue")
         frm.display(self)
 
     def gotNewIssue(self, issue):
@@ -65,7 +59,6 @@ class MainPanel():
         """Delete the currently selected issue."""
         # this is the button
         # btn = event.getSource()
-        # let's try and delete something
         row = self.tableIssue.getTableSelectedRow()
         # YOLO
         self.tableIssue.deleteRow(row)
