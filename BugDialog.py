@@ -136,7 +136,7 @@ class BugDialog(JDialog):
         self.buttonReset = JButton("Reset",
                                    actionPerformed=self.resetButtonAction)
 
-        # description textarea
+        # description and remediation textareas
         from java.awt import Dimension
         self.textAreaDescription.setPreferredSize(Dimension(400,500))
         self.textAreaDescription.setLineWrap(True)

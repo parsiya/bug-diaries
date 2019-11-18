@@ -132,6 +132,10 @@ class MainPanel():
         self.tabIssue = JTabbedPane()
         self.textAreaDescription = JTextArea()
         self.textAreaRemediation = JTextArea()
+        # JScrollPanes to hold the two jTextAreas
+        # put the textareas in JScrollPanes
+        self.jsPaneDescription = JScrollPane(self.textAreaDescription)
+        self.jsPaneRemediation = JScrollPane(self.textAreaRemediation)
         self.panelRequest = self.callbacks.createMessageEditor(None, False)
         self.panelResponse = self.callbacks.createMessageEditor(None, False)
 
@@ -173,11 +177,15 @@ class MainPanel():
 
         # description textarea
         self.textAreaDescription.editable = False
-        self.tabIssue.addTab("Description", self.textAreaDescription)
+        self.textAreaDescription.setLineWrap(True)
+        self.textAreaDescription.setWrapStyleWord(True)
+        self.tabIssue.addTab("Description", self.jsPaneDescription)
 
         # remediation textarea
         self.textAreaRemediation.editable = False
-        self.tabIssue.addTab("Remediation", self.textAreaRemediation)
+        self.textAreaRemediation.setLineWrap(True)
+        self.textAreaRemediation.setWrapStyleWord(True)
+        self.tabIssue.addTab("Remediation", self.jsPaneRemediation)
 
         # request tab
         self.panelRequest.setMessage("", True)
