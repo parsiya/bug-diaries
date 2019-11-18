@@ -2,26 +2,9 @@
 
 from java.awt.event import ComponentListener
 from Issue import Issue
-
-class DialogListener(ComponentListener):
-    """ComponentListener for the EditDialog."""
-
-    def __init__(self, dialog):
-        """DialogListener constructor to save a reference to the dialog."""
-        self.dialog = dialog
-
-
-
-    def componentMoved(self, event):
-        pass
-
-    def componentResized(self, event):
-        pass
-
-    def componentShown(self, event):
-        pass
-
 from BugDialog import BugDialog
+
+
 class EditIssueDialog(BugDialog):
     """Represents the dialog used to edit an issue."""
 
@@ -54,12 +37,12 @@ class EditIssueDialog(BugDialog):
         # pass the index
         # let's see if it's needed later.
         self.index = issue.index
-
         # pass the issue from the constructor.
         BugDialog.__init__(self, callbacks, title, modality, issue)
-
         # add the save button action
         self.buttonSave.actionPerformed = self.saveButtonAction
-    
         # override the componentHidden method of ComponentListener
         self.componentListeners[0].componentHidden = self.componentHidden
+
+        # hide the reset button.
+        self.buttonReset.setVisible(False)

@@ -9,10 +9,10 @@ class MainPanel():
     """Represents the converted frame from NetBeans."""
 
     defaultIssue = Issue(
-        name="Issue Type/Name",
+        name="Name",
         severity="Critical",
-        host="Issue Host",
-        path="Issue Path",
+        host="Host",
+        path="Path",
         description="Description",
         remediation="",
         request="",
@@ -38,7 +38,6 @@ class MainPanel():
         # request and response tabs
         self.panelRequest.setMessage(issue.getRequest(), True)
         self.panelResponse.setMessage(issue.getResponse(), False)
-
 
     # button actions
     def newIssueAction(self, event):
@@ -105,9 +104,9 @@ class MainPanel():
         
         # save the last directory
         self.callbacks.saveExtensionSetting("lastDir", usedDirectory)
-        import json
         fi = open(selectedFile.getAbsolutePath(), "r")
         # read the file and create a list of Issues
+        import json
         newIssues = json.load(fi, object_hook=dictToIssue)
         # clear the table
         self.tableIssue.clear()
@@ -122,7 +121,7 @@ class MainPanel():
         self.callbacks = callbacks
         self.jScrollPane1 = JScrollPane()
         self.jPanel1 = JPanel()
-        self.labelName = JLabel("Issue Type/Name")
+        self.labelName = JLabel("Name")
         self.textName = JTextField()
         self.labelSeverity = JLabel("Severity")
         self.textSeverity = JTextField()
