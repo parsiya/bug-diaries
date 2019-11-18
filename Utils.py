@@ -111,5 +111,6 @@ def dictToIssue(d):
     """Returns an Issue from a dictionary."""
     from Issue import Issue
     iss = Issue()
-    iss.__dict__ = d
+    iss.__dict__.update(d)
+    # iss.__dict__ = d # would overwrite existing attributes
     return iss

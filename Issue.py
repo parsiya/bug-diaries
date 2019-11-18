@@ -3,7 +3,7 @@ from base64 import b64decode, b64encode
 
 class Issue():
     """Issue represents one finding."""
-    # issue name/type.
+    # issue name.
     name = ""  # type: str
     # severity: could be an enum but we will use a string to support custom
     # values.
@@ -59,5 +59,13 @@ class Issue():
         return json.dumps(self.__dict__, indent=4)
 
     def __str__(self):
+        # type: () -> (str)
         """Stringer for the Issue object."""
         return str(self.JSON())
+
+    # toString() does not work.
+    # https://stackoverflow.com/a/6950800
+    def __repr__(self):
+        # type: () -> (str)
+        """Override toString() to return the name for JCombobox."""
+        return self.name

@@ -203,17 +203,14 @@ class IssueTableMouseListener(MouseListener):
             # print "double-click"
             tbl = event.getSource()
             currentIssue = self.getClickedRow(event)
-            from EditDialog import EditDialog
+            from EditIssueDialog import EditIssueDialog
             from MainPanel import burpPanel
             # add a new attribute to currentIssue to hold the index
             currentIssue.index = tbl.getTableSelectedRow()
-            frm = EditDialog(burpPanel.callbacks,
+            frm = EditIssueDialog(burpPanel.callbacks,
                              title="Edit " + currentIssue.name,
                              issue=currentIssue)
             frm.display(burpPanel)
-
-
-            # edit the issue?
 
     def mouseEntered(self, event):
         pass

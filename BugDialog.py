@@ -1,14 +1,13 @@
 # Base frame for creating and editing issues.
 
-from javax.swing import (JPanel, JLabel, JTextField, JTabbedPane, JPanel,
-                         JTextField, JButton, JSplitPane, BorderFactory,
-                         GroupLayout, JTextArea, JComboBox, LayoutStyle,
-                         JDialog, WindowConstants)
-
-
+from javax.swing import (LayoutStyle, JTextField, JTabbedPane, WindowConstants,
+                         JTextField, JButton, JSplitPane, JComboBox, JLabel,
+                         JDialog, GroupLayout, JTextArea, BorderFactory, 
+                         JScrollPane)
 from Issue import Issue
-
 from java.awt.event import ComponentListener
+
+
 class DialogListener(ComponentListener):
     """ComponentListener for the frame."""
 
@@ -37,10 +36,10 @@ class BugDialog(JDialog):
 
     # default issue to populate the panel with
     defaultIssue = Issue(
-        name="Issue Type/Name",
+        name="Name",
         severity="Critical",
-        host="Issue Host",
-        path="Issue Path",
+        host="Host",
+        path="Path",
         description="Description",
         remediation="",
         request="",
@@ -82,6 +81,7 @@ class BugDialog(JDialog):
     def resetButtonAction(self, event):
         """Reset the dialog."""
         self.loadPanel(self.defaultIssue)
+        self.comboTemplate.setSelectedIndex(0)
 
     # Inheriting forms should implement this
     def saveButtonAction(self, event):
@@ -116,13 +116,17 @@ class BugDialog(JDialog):
         self.tabIssue = JTabbedPane()
         self.textAreaDescription = JTextArea()
         self.textAreaRemediation = JTextArea()
+        # JScrollPanes to hold the two jTextAreas
+        # put the textareas in JScrollPanes
+        self.jsPaneDescription = JScrollPane(self.textAreaDescription)
+        self.jsPaneRemediation = JScrollPane(self.textAreaRemediation)
         self.panelRequest = callbacks.createMessageEditor(None, True)
         self.panelResponse = callbacks.createMessageEditor(None, True)
         self.textName = JTextField()
         self.textHost = JTextField()
         self.textPath = JTextField()
         self.labelHost = JLabel("Host")
-        self.labelName = JLabel("Issue Type/Name")
+        self.labelName = JLabel("Name")
 
         # buttons
         self.buttonSave = JButton("Save",
@@ -135,9 +139,12 @@ class BugDialog(JDialog):
         # description textarea
         from java.awt import Dimension
         self.textAreaDescription.setPreferredSize(Dimension(400,500))
-        self.tabIssue.addTab("Description", self.textAreaDescription)
-        self.tabIssue.addTab("Remediation", self.textAreaRemediation)
-
+        self.textAreaDescription.setLineWrap(True)
+        self.textAreaDescription.setWrapStyleWord(True)
+        self.textAreaRemediation.setLineWrap(True)
+        self.textAreaRemediation.setWrapStyleWord(True)
+        self.tabIssue.addTab("Description", self.jsPaneDescription)
+        self.tabIssue.addTab("Remediation", self.jsPaneRemediation)
         # request and response tabs
         # request tab
         self.panelRequest.setMessage("", True)
@@ -145,7 +152,10 @@ class BugDialog(JDialog):
         # response tab
         self.panelResponse.setMessage("", False)
         self.tabIssue.addTab("Response", self.panelResponse.getComponent())
-
+        # template
+        self.labelTemplate = JLabel("Template")
+        self.comboTemplate = JComboBox()
+        
         # TODO: Populate this from outside using a config file from the
         # constructor? or perhaps the extension config 
         self.comboSeverity = JComboBox(["Critical", "High", "Medium", "Low",
@@ -167,35 +177,38 @@ class BugDialog(JDialog):
         layout.setHorizontalGroup(
             layout.createParallelGroup(GroupLayout.Alignment.CENTER)
                 .addGroup(layout.createSequentialGroup()
-                          .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-                                    .addGroup(layout.createSequentialGroup()
-                                              .addContainerGap()
-                                              .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                                        .addGroup(layout.createSequentialGroup()
-                                                                  .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                                                            .addComponent(self.labelHost)
-                                                                            .addComponent(self.labelName))
-                                                                  .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                                                  .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                                                            .addGroup(layout.createSequentialGroup()
-                                                                                      .addComponent(self.textHost, GroupLayout.PREFERRED_SIZE, 212, GroupLayout.PREFERRED_SIZE)
-                                                                                      .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                                                                      .addComponent(self.labelPath)
-                                                                                      .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                                                      .addComponent(self.textPath))
-                                                                            .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                                                                      .addComponent(self.textName, GroupLayout.PREFERRED_SIZE, 620, GroupLayout.PREFERRED_SIZE)
-                                                                                      .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                                                                      .addComponent(self.labelSeverity)
-                                                                                      .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                                                                      .addComponent(self.comboSeverity, GroupLayout.PREFERRED_SIZE, 182, GroupLayout.PREFERRED_SIZE))))
-                                                        .addComponent(self.tabIssue)))
-                                    .addGroup(layout.createSequentialGroup()
-                                              .addComponent(self.buttonSave, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
-                                              .addComponent(self.buttonReset, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
-                                              .addComponent(self.buttonCancel, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE))
-                                    )
-                          .addContainerGap())
+                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                        .addGroup(layout.createSequentialGroup()
+                                    .addContainerGap()
+                                    .addGroup(layout.createParallelGroup()
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addGroup(layout.createParallelGroup()
+                                                .addComponent(self.labelTemplate)
+                                                .addComponent(self.labelHost)
+                                                .addComponent(self.labelName))
+                                            .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                            .addGroup(layout.createParallelGroup()
+                                                .addGroup(layout.createSequentialGroup()
+                                                    .addComponent(self.comboTemplate))
+                                                .addGroup(layout.createSequentialGroup()
+                                                    .addComponent(self.textHost, GroupLayout.PREFERRED_SIZE, 212, GroupLayout.PREFERRED_SIZE)
+                                                    .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                                    .addComponent(self.labelPath)
+                                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                    .addComponent(self.textPath))
+                                                .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                                    .addComponent(self.textName, GroupLayout.PREFERRED_SIZE, 620, GroupLayout.PREFERRED_SIZE)
+                                                    .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                                    .addComponent(self.labelSeverity)
+                                                    .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                                    .addComponent(self.comboSeverity, GroupLayout.PREFERRED_SIZE, 182, GroupLayout.PREFERRED_SIZE))))
+                                        .addComponent(self.tabIssue)))
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(self.buttonSave, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(self.buttonReset, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(self.buttonCancel, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE))
+                        )
+                    .addContainerGap())
         )
 
         # link size of buttons together
@@ -205,28 +218,35 @@ class BugDialog(JDialog):
         layout.setVerticalGroup(
             layout.createParallelGroup()
                 .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                          .addContainerGap()
-                          .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                    .addComponent(self.labelName)
-                                    .addComponent(self.textName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(self.labelSeverity)
-                                    .addComponent(self.comboSeverity, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                          .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                          .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                    .addComponent(self.textHost, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(self.labelPath)
-                                    .addComponent(self.textPath, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(self.labelHost))
-                          .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                          .addComponent(self.tabIssue)
-                          .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                          .addGroup(layout.createParallelGroup()
-                                    .addComponent(self.buttonSave)
-                                    .addComponent(self.buttonReset)
-                                    .addComponent(self.buttonCancel))
-                          .addContainerGap())
+                    .addContainerGap()
+                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(self.labelName)
+                        .addComponent(self.textName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(self.labelSeverity)
+                        .addComponent(self.comboSeverity, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(self.textHost, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(self.labelPath)
+                        .addComponent(self.textPath, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(self.labelHost))
+                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(self.comboTemplate, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(self.labelTemplate))
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(self.tabIssue)
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(layout.createParallelGroup()
+                        .addComponent(self.buttonSave)
+                        .addComponent(self.buttonReset)
+                        .addComponent(self.buttonCancel))
+                    .addContainerGap())
         )
         # end of converted code from NetBeans
+
+        # set the template label and combobox to invisible
+        self.labelTemplate.setVisible(False)
+        self.comboTemplate.setVisible(False)
 
     def display(self, parent):
         """packs and shows the frame."""
@@ -238,3 +258,15 @@ class BugDialog(JDialog):
         # self.show()
         self.setVisible(True)
 
+    def loadTemplate(self):
+        """Reads the template file and populates the combobox for NewIssueDialog.
+        """
+        templateFile = "data\\templates-cwe-1200.json"
+        fi = open(templateFile, "r")
+        from Utils import dictToIssue
+        import json
+        templateIssues = json.load(fi, object_hook=dictToIssue)
+        self.templateIssues = templateIssues
+        # templateNames = [t.name for t in self.templateIssues]
+        for t in self.templateIssues:
+            self.comboTemplate.addItem(t)
