@@ -38,7 +38,7 @@ class EditIssueDialog(BugDialog):
         # let's see if it's needed later.
         self.index = issue.index
         # pass the issue from the constructor.
-        BugDialog.__init__(self, callbacks, title, modality, issue)
+        BugDialog.__init__(self, callbacks, issue, title, modality)
         # add the save button action
         self.buttonSave.actionPerformed = self.saveButtonAction
         # override the componentHidden method of ComponentListener

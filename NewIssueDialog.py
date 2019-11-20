@@ -13,11 +13,8 @@ class ComboListener(ActionListener):
     def actionPerformed(self, event):
         """Invoked when the selection on the template combobox is changed."""
         src = event.getSource()
-        # print src
-        print event.getActionCommand()
         selected = src.getSelectedItem()
-        self.myParent.loadPanel(selected)
-
+        self.myParent.loadTemplateIntoPanel(selected)
 
 class NewIssueDialog(BugDialog):
     """Represents the dialog used to create a new issue."""
@@ -41,10 +38,13 @@ class NewIssueDialog(BugDialog):
         issue = self.issue
         self.dlgParent.gotNewIssue(issue)
    
-    def __init__(self, callbacks, title="", modality=""):
+    def __init__(self, callbacks, issue=None, title="", modality=""):
         """Constructor to populate the dialog with the new issue."""
         # call the BugDialog constructor.
-        BugDialog.__init__(self, callbacks, title, modality)
+        if issue is not None:
+            BugDialog.__init__(self, callbacks=callbacks, issue=issue, title=title, modality=modality)
+        else:
+            BugDialog.__init__(self, callbacks=callbacks, title=title, modality=modality)
 
         # set the save button action
         self.buttonSave.actionPerformed = self.saveButtonAction
@@ -57,8 +57,6 @@ class NewIssueDialog(BugDialog):
         # set the actionPerformed
         listener = ComboListener(self)
         self.comboTemplate.addActionListener(listener)
-        # print dir(self.comboTemplate)
-
         # enable the template label and combobox
         self.labelTemplate.setVisible(True)
         self.comboTemplate.setVisible(True)

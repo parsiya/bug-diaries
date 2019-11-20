@@ -9,10 +9,22 @@ except ImportError:
 
 from burp import IBurpExtender
 # needed for tab
-from burp import ITab
+from burp import ITab, IContextMenuFactory
+from Issue import Issue
+from java.awt.event import ActionListener
+
+class ContextMenuListener(ActionListener):
+    """ActionListener for the Burp context menu."""
+    def __init__(self, invocation):
+        self.invocation = invocation
+
+    def actionPerformed(self, event):
+        """Invoked when the context menu item is selected."""
+        from MainPanel import burpPanel
+        burpPanel.newIssueFromBurp(self.invocation)
 
 
-class BurpExtender(IBurpExtender, ITab):
+class BurpExtender(IBurpExtender, ITab, IContextMenuFactory):
     # implement IBurpExtender
 
     # set everything up
@@ -32,6 +44,8 @@ class BurpExtender(IBurpExtender, ITab):
 
         # add the tab to Burp's UI
         callbacks.addSuiteTab(self)
+        # register the context menu
+        callbacks.registerContextMenuFactory(self)
 
     # implement ITab
     # https://portswigger.net/burp/extender/api/burp/ITab.html
@@ -58,7 +72,6 @@ class BurpExtender(IBurpExtender, ITab):
             # [2, "Issue2", "Severity2", "Host2", "Path2"],
         ]
         from IssueTable import IssueTable
-        from Issue import Issue
         issues = list()
         for it in tableData:
             tmpIssue = Issue(name=it[0], severity=it[1],host=it[2],
@@ -69,12 +82,22 @@ class BurpExtender(IBurpExtender, ITab):
         table = IssueTable(issues)
         import MainPanel
         MainPanel.burpPanel = MainPanel.MainPanel(self.callbacks, table)
-        # from EditFrame import EditFrame
-        # edf = EditFrame(self.callbacks)
-        # edf.display()
-        # return edf
-
         return MainPanel.burpPanel.panel
+    
+    # implement IContextMenuFactory
+    # https://portswigger.net/burp/extender/api/burp/IContextMenuFactory.html
+    def createMenuItems(self, invocation):
+        """Called when a context menu is invoked in Burp."""
+        from javax.swing import JMenuItem
+        customMenuItem = JMenuItem("Create Custom Issue")
+        contextMenuListener = ContextMenuListener(invocation)
+        customMenuItem.addActionListener(contextMenuListener)
+
+        from java.util import ArrayList
+        menuArray = ArrayList()
+        menuArray.add(customMenuItem)
+
+        return menuArray
 
 # support for burp-exceptions
 try:
