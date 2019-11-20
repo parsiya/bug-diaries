@@ -39,6 +39,7 @@ class MainPanel():
         self.textSeverity.text = issue.severity
         # request and response tabs
         self.panelRequest.setMessage(issue.getRequest(), True)
+        self.panelResponse.setMessage(issue.getRequest(), False)
 
     # button actions
     def newIssueAction(self, event):
