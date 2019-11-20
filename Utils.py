@@ -110,7 +110,43 @@ def readFile(file):
 def dictToIssue(d):
     """Returns an Issue from a dictionary."""
     from Issue import Issue
+    if d is None:
+        return None
     iss = Issue()
     iss.__dict__.update(d)
     # iss.__dict__ = d # would overwrite existing attributes
     return iss
+
+def bytesToString(callbacks, b):
+    # type: (bytearray) -> (str)
+    """Converts a byte[] to string."""
+    if b is None:
+        return ""
+    return callbacks.getHelpers().bytesToString(b)
+
+def getPath(callbacks, reqResp):
+    # type: (IHttpRequestResponse) -> (str)
+    """Analyzes a byte[] of a request and returns the path."""
+    if reqResp is None or callbacks is None:
+        return ""
+    info = callbacks.getHelpers().analyzeRequest(reqResp)
+    return info.getUrl().getFile()
+
+def burpToolName(flag):
+    # type: (int) -> (str)
+    """Converts a tool flag int to string representing the tool name."""
+    # https://portswigger.net/burp/extender/api/constant-values.html#burp
+    tool = {
+        1: "Suite",
+        2: "Target",
+        4: "Proxy",
+        8: "Spider",
+        16: "Scanner",
+        32: "Intruder",
+        64: "Repeater",
+        128: "Sequencer",
+        256: "Decoder",
+        512: "Comparer",
+        1024: "Extender"
+    }
+    return tool[flag]

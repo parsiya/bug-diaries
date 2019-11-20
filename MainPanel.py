@@ -4,6 +4,8 @@ from javax.swing import (JScrollPane, JTable, JPanel, JTextField, JLabel,
                          JTabbedPane, table, BorderFactory, GroupLayout,
                          LayoutStyle, JFrame, JTextArea, JSplitPane, JButton)
 from Issue import Issue
+from NewIssueDialog import NewIssueDialog
+
 
 class MainPanel():
     """Represents the converted frame from NetBeans."""
@@ -37,13 +39,11 @@ class MainPanel():
         self.textSeverity.text = issue.severity
         # request and response tabs
         self.panelRequest.setMessage(issue.getRequest(), True)
-        self.panelResponse.setMessage(issue.getResponse(), False)
 
     # button actions
     def newIssueAction(self, event):
         """Pops up a frame to add a new issue."""
-        from NewIssueDialog import NewIssueDialog
-        frm = NewIssueDialog(self.callbacks, "New Issue")
+        frm = NewIssueDialog(callbacks=self.callbacks, title="New Issue")
         frm.display(self)
 
     def gotNewIssue(self, issue):
@@ -114,6 +114,25 @@ class MainPanel():
         # for iss in newIssues:
         #     self.tableIssue.addRow(iss)
         self.tableIssue.populate(newIssues)
+    
+    def newIssueFromBurp(self, invocation):
+        """Create a New Issue from the context menu."""
+        from Utils import getPath, bytesToString, burpToolName
+        reqResp = invocation.getSelectedMessages()[0]
+        host = str(reqResp.getHttpService())
+        path = getPath(self.callbacks, reqResp)
+        req = bytesToString(self.callbacks, reqResp.getRequest())
+        resp = bytesToString(self.callbacks, reqResp.getResponse())
+        tmpIssue = Issue(host=host, path=path, request=req, response=resp)
+        # change the title to "New Issue from [TOOL]"?
+        frameTitle = "New Issue from %s" % (burpToolName(invocation.getToolFlag()))
+        frm = NewIssueDialog(callbacks=self.callbacks, issue=tmpIssue,
+                             title=frameTitle
+                            #  , modality="application"
+                             )
+        frm.display(self)
+        frm.requestFocus()
+        # print self.callbacks.getHelpers().bytesToString(reqResp[0].getRequest())
 
     # mostly converted generated code
     def __init__(self, callbacks, table=None):

@@ -73,6 +73,40 @@ class BugDialog(JDialog):
         # request and response tabs
         self.panelRequest.setMessage(issue.getRequest(), True)
         self.panelResponse.setMessage(issue.getResponse(), False)
+        # reset the template combobox (only applicable to NewIssueDialog)
+        self.comboTemplate.setSelectedIndex(-1)
+    
+    def loadTemplateIntoPanel(self, issue):
+        # type: (Issue) -> ()
+        """Populates the panel with the template issue.
+        Does not overwrite:
+        name (append), host, path, severity, request and response."""
+        if issue is None:
+            return
+        
+        # check if the input is the correct object
+        assert isinstance(issue, Issue)
+
+        # set textfields and textareas
+        # selectionStart=0 selects the text in the textfield when it is in focus
+        self.textName.text += " - " + issue.name
+        self.textName.selectionStart = 0
+        # self.textHost.text = issue.host
+        # self.textHost.selectionStart = 0
+        # self.textPath.text = issue.path
+        # self.textPath.selectionStart = 0
+        self.textAreaDescription.text = issue.description
+        self.textAreaDescription.selectionStart = 0
+        self.textAreaRemediation.text = issue.remediation
+        self.textAreaRemediation.selectionStart = 0
+        # severity combobox
+        # this is case-sensitive apparently
+        # self.comboSeverity.setSelectedItem(issue.severity)
+        # request and response tabs
+        # self.panelRequest.setMessage(issue.getRequest(), True)
+        # self.panelResponse.setMessage(issue.getResponse(), False)
+        # reset the template combobox (only applicable to NewIssueDialog)
+        self.comboTemplate.setSelectedIndex(-1)
 
     def cancelButtonAction(self, event):
         """Close the dialog when the cancel button is clicked."""
@@ -81,7 +115,6 @@ class BugDialog(JDialog):
     def resetButtonAction(self, event):
         """Reset the dialog."""
         self.loadPanel(self.defaultIssue)
-        self.comboTemplate.setSelectedIndex(0)
 
     # Inheriting forms should implement this
     def saveButtonAction(self, event):
@@ -89,7 +122,7 @@ class BugDialog(JDialog):
         Inheriting classes must implement this."""
         pass
     
-    def __init__(self, callbacks, title="", modality="", issue=defaultIssue):
+    def __init__(self, callbacks, issue=defaultIssue, title="", modality=""):
         """Constructor, populates the dialog."""
         # set the title
         self.setTitle(title)
