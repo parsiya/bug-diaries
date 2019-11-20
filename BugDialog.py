@@ -129,6 +129,9 @@ class BugDialog(JDialog):
         # store the issue
         self.issue = issue
 
+        from javax.swing import JFrame
+        self.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+
         if modality is not "":
             from java.awt.Dialog import ModalityType
             modality = modality.lower()

@@ -6,7 +6,6 @@ from javax.swing import (JScrollPane, JTable, JPanel, JTextField, JLabel,
 from Issue import Issue
 from NewIssueDialog import NewIssueDialog
 
-
 class MainPanel():
     """Represents the converted frame from NetBeans."""
 
@@ -48,7 +47,7 @@ class MainPanel():
         frm.display(self)
 
     def gotNewIssue(self, issue):
-        """got a new issue"""
+        """got a new issue."""
         self.tableIssue.addRow(issue)
     
     def editIssue(self, index, issue):
