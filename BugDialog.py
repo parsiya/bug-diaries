@@ -72,8 +72,16 @@ class BugDialog(JDialog, IMessageEditorController):
         # this is case-sensitive apparently
         self.comboSeverity.setSelectedItem(issue.severity)
         # request and response tabs
-        self.panelRequest.setMessage(issue.getRequest(), True)
-        self.panelResponse.setMessage(issue.getResponse(), False)
+        # check if messages are null, some issues might not have responses.
+        if issue.getRequest() is None:
+            self.panelRequest.setMessage("", True)
+        else:
+            self.panelRequest.setMessage(issue.getRequest(), True)
+
+        if issue.getResponse() is None:
+            self.panelResponse.setMessage("", False)
+        else:
+            self.panelResponse.setMessage(issue.getResponse(), False)
         # reset the template combobox (only applicable to NewIssueDialog)
         self.comboTemplate.setSelectedIndex(-1)
     
