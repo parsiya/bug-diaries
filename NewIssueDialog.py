@@ -1,6 +1,7 @@
 # Frame to create a new issue.
 
 from Issue import Issue
+from RequestResponse import RequestResponse
 from BugDialog import BugDialog
 
 
@@ -21,14 +22,16 @@ class NewIssueDialog(BugDialog):
 
     def saveButtonAction(self, event):
         """Save the new issue."""
+        tmpReqResp = RequestResponse(
+            request=self.panelRequest.getMessage(),
+            response=self.panelResponse.getMessage()
+        )
         ist = Issue(name=self.textName.text, host=self.textHost.text,
                     path=self.textPath.text,
                     description=self.textAreaDescription.text,
                     remediation=self.textAreaRemediation.text,
                     severity=str(self.comboSeverity.getSelectedItem()),
-                    request=self.panelRequest.getMessage(),
-                    response=self.panelResponse.getMessage())
-        ist.reqResp = self.reqResp
+                    reqResp=tmpReqResp)
         self.issue = ist
         self.setVisible(False)
     
@@ -43,9 +46,11 @@ class NewIssueDialog(BugDialog):
         """Constructor to populate the dialog with the new issue."""
         # call the BugDialog constructor.
         if issue is not None:
-            BugDialog.__init__(self, callbacks=callbacks, issue=issue, title=title, modality=modality)
+            BugDialog.__init__(self, callbacks=callbacks, issue=issue,
+                title=title, modality=modality)
         else:
-            BugDialog.__init__(self, callbacks=callbacks, title=title, modality=modality)
+            BugDialog.__init__(self, callbacks=callbacks, title=title,
+                modality=modality)
 
         # set the save button action
         self.buttonSave.actionPerformed = self.saveButtonAction
@@ -63,4 +68,4 @@ class NewIssueDialog(BugDialog):
         self.comboTemplate.setVisible(True)
 
         # add reqResp
-        self.reqResp = issue.reqResp
+        # self.reqResp = issue.reqResp

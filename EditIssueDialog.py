@@ -2,6 +2,7 @@
 
 from java.awt.event import ComponentListener
 from Issue import Issue
+from RequestResponse import RequestResponse
 from BugDialog import BugDialog
 
 
@@ -10,13 +11,16 @@ class EditIssueDialog(BugDialog):
 
     def saveButtonAction(self, event):
         """Save the edited issue."""
+        tmpReqResp = RequestResponse(
+            request=self.panelRequest.getMessage(),
+            response=self.panelResponse.getMessage()
+        )
         ist = Issue(name=self.textName.text, host=self.textHost.text,
                     path=self.textPath.text,
                     description=self.textAreaDescription.text,
                     remediation=self.textAreaRemediation.text,
                     severity=str(self.comboSeverity.getSelectedItem()),
-                    request=self.panelRequest.getMessage(),
-                    response=self.panelResponse.getMessage())
+                    reqResp=tmpReqResp)
         self.issue = ist
         # pass the index
         self.issue.index = self.index
@@ -46,6 +50,3 @@ class EditIssueDialog(BugDialog):
 
         # hide the reset button.
         self.buttonReset.setVisible(False)
-
-        print "self.issue.reqResp: "
-        print self.issue.reqResp

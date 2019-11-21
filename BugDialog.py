@@ -5,6 +5,7 @@ from javax.swing import (LayoutStyle, JTextField, JTabbedPane, WindowConstants,
                          JDialog, GroupLayout, JTextArea, BorderFactory, 
                          JScrollPane)
 from Issue import Issue
+from RequestResponse import RequestResponse
 from java.awt.event import ComponentListener
 from burp import IMessageEditorController
 
@@ -43,8 +44,7 @@ class BugDialog(JDialog, IMessageEditorController):
         path="Path",
         description="Description",
         remediation="",
-        request="",
-        response=""
+        reqResp=RequestResponse(request="", response="")
     )
 
     def loadPanel(self, issue):

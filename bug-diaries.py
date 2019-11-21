@@ -11,6 +11,7 @@ from burp import IBurpExtender
 # needed for tab
 from burp import ITab, IContextMenuFactory, IMessageEditorController
 from Issue import Issue
+from RequestResponse import RequestResponse
 from java.awt.event import ActionListener
 
 class ContextMenuListener(ActionListener):
@@ -75,8 +76,8 @@ class BurpExtender(IBurpExtender, ITab, IContextMenuFactory):
         issues = list()
         for it in tableData:
             tmpIssue = Issue(name=it[0], severity=it[1],host=it[2],
-                             path=it[3], description=it[4], remediation=it[5],
-                             request=it[6], response=it[7])
+                path=it[3], description=it[4], remediation=it[5],
+                reqResp=RequestResponse(request=it[6], response=it[7]))
             issues.append(tmpIssue)
 
         table = IssueTable(issues)

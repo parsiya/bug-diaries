@@ -4,11 +4,13 @@ from javax.swing import (JScrollPane, JTable, JPanel, JTextField, JLabel,
                          JTabbedPane, table, BorderFactory, GroupLayout,
                          LayoutStyle, JFrame, JTextArea, JSplitPane, JButton)
 from Issue import Issue
+from RequestResponse import RequestResponse
 from NewIssueDialog import NewIssueDialog
 
 class MainPanel():
     """Represents the converted frame from NetBeans."""
 
+    # default issue to populate the panel with
     defaultIssue = Issue(
         name="Name",
         severity="Critical",
@@ -16,8 +18,7 @@ class MainPanel():
         path="Path",
         description="Description",
         remediation="",
-        request="",
-        response=""
+        reqResp=RequestResponse(request="", response="")
     )
 
     def loadPanel(self, issue):
@@ -38,7 +39,7 @@ class MainPanel():
         self.textSeverity.text = issue.severity
         # request and response tabs
         self.panelRequest.setMessage(issue.getRequest(), True)
-        self.panelResponse.setMessage(issue.getRequest(), False)
+        self.panelResponse.setMessage(issue.getResponse(), False)
 
     # button actions
     def newIssueAction(self, event):
@@ -121,11 +122,7 @@ class MainPanel():
         reqResp = invocation.getSelectedMessages()[0]
         host = str(reqResp.getHttpService())
         path = getPath(self.callbacks, reqResp)
-        req = bytesToString(self.callbacks, reqResp.getRequest())
-        resp = bytesToString(self.callbacks, reqResp.getResponse())
-        tmpIssue = Issue(host=host, path=path, request=req, response=resp)
-        # add reqResp
-        tmpIssue.reqResp = reqResp
+        tmpIssue = Issue(host=host, path=path, reqResp=reqResp)
         # change the title to "New Issue from [TOOL]"?
         frameTitle = "New Issue from %s" % (burpToolName(invocation.getToolFlag()))
         frm = NewIssueDialog(callbacks=self.callbacks, issue=tmpIssue,

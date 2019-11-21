@@ -1,5 +1,6 @@
 # Each Issue contains the information for one finding.
 from base64 import b64decode, b64encode
+from RequestResponse import RequestResponse
 
 class Issue():
     """Issue represents one finding."""
@@ -13,33 +14,26 @@ class Issue():
     path = ""  # type: str
     description = ""  # type: str
     remediation = ""  # type: str
-    # request and response will be stored as base64 encoded strings.
-    request = ""  # type: str
-    response = ""  # type: str
-    reqResp = "" # type: (IHttpRequestResponse)
+    reqResp = "" # type: RequestResponse
 
     def getRequest(self):
-        # type: () -> bytearray
-        """Base64 decode the request and return the results."""
-        return b64decode(self.request)
+        # type: () -> (bytearray)
+        return self.reqResp.getRequest()
 
     def setRequest(self, req):
-        # type: (bytearray) -> None
-        """Base64 encode the request and store it."""
-        self.request = b64encode(req)
+        # type: (bytearray) -> ()
+        self.reqResp.setRequest(req)
 
     def getResponse(self):
-        # type: () -> bytearray
-        """Base64 decode the response and return the results."""
-        return b64decode(self.response)
+        # type: () -> (bytearray)
+        return self.reqResp.getResponse()
 
     def setResponse(self, resp):
-        # type: (bytearray) -> None
-        """Base64 encode the response and store it."""
-        self.response = b64encode(resp)
+        # type: (bytearray) -> ()
+        self.reqResp.setResponse(resp)
 
     def __init__(self, name="", severity="", host="", path="",
-                 description="", remediation="", request="", response=""):
+                 description="", remediation="", reqResp=None):
         """Create the issue."""
         self.name = name
         self.severity = severity
@@ -47,17 +41,17 @@ class Issue():
         self.path = path
         self.description = description
         self.remediation = remediation
-        self.setRequest(request)
-        self.setResponse(response)
+        self.reqResp = reqResp
 
     def JSON(self):
+        # type: () -> (str)
         """Returns the Issue in JSON."""
         import json
         # TODO: Change indent to 2?
         # TODO: Also make it configurable in the extension config
         # json.dumps(self.__dict__) without the indent, it returns an error
         # that it's not serializable
-        return json.dumps(self.__dict__, indent=4)
+        return json.dumps(self.__dict__, indent=2)
 
     def __str__(self):
         # type: () -> (str)

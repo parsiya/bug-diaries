@@ -150,7 +150,7 @@ class IssueTableModel(AbstractTableModel):
     def issuesToJSON(self):
         # type: () -> (str)
         """Returns a JSON array of all issues."""
-        return json.dumps([iss.__dict__ for iss in self.issues], indent=4)
+        return json.dumps([iss.__dict__ for iss in self.issues], indent=2)
     
     def clear(self):
         # type: () -> ()
