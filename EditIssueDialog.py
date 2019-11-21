@@ -46,3 +46,6 @@ class EditIssueDialog(BugDialog):
 
         # hide the reset button.
         self.buttonReset.setVisible(False)
+
+        print "self.issue.reqResp: "
+        print self.issue.reqResp

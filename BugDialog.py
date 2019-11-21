@@ -6,6 +6,7 @@ from javax.swing import (LayoutStyle, JTextField, JTabbedPane, WindowConstants,
                          JScrollPane)
 from Issue import Issue
 from java.awt.event import ComponentListener
+from burp import IMessageEditorController
 
 
 class DialogListener(ComponentListener):
@@ -31,7 +32,7 @@ class DialogListener(ComponentListener):
         pass
 
 
-class BugDialog(JDialog):
+class BugDialog(JDialog, IMessageEditorController):
     """Represents the dialog."""
 
     # default issue to populate the panel with
@@ -121,6 +122,24 @@ class BugDialog(JDialog):
         """Save the current issue.
         Inheriting classes must implement this."""
         pass
+
+    # implement IMessageEditorController
+    # https://portswigger.net/burp/extender/api/burp/IMessageEditorController.html
+    def getHttpService(self):
+        """This method is used to retrieve the HTTP service for the current
+        message."""
+        print 
+        return self.issue.reqResp.getHttpService()
+    
+    def getRequest(self):
+        """This method is used to retrieve the HTTP request associated with the
+        current message (which may itself be a response)."""
+        return self.issue.reqResp.getRequest()
+    
+    def getResponse(self):
+        """This method is used to retrieve the HTTP response associated with the
+        current message (which may itself be a request)."""
+        return self.issue.reqResp.getResponse()
     
     def __init__(self, callbacks, issue=defaultIssue, title="", modality=""):
         """Constructor, populates the dialog."""
@@ -130,7 +149,7 @@ class BugDialog(JDialog):
         self.issue = issue
 
         from javax.swing import JFrame
-        self.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        self.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE)
 
         if modality is not "":
             from java.awt.Dialog import ModalityType
@@ -156,8 +175,8 @@ class BugDialog(JDialog):
         # put the textareas in JScrollPanes
         self.jsPaneDescription = JScrollPane(self.textAreaDescription)
         self.jsPaneRemediation = JScrollPane(self.textAreaRemediation)
-        self.panelRequest = callbacks.createMessageEditor(None, True)
-        self.panelResponse = callbacks.createMessageEditor(None, True)
+        self.panelRequest = callbacks.createMessageEditor(self, True)
+        self.panelResponse = callbacks.createMessageEditor(self, True)
         self.textName = JTextField()
         self.textHost = JTextField()
         self.textPath = JTextField()

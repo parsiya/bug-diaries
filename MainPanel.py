@@ -124,6 +124,8 @@ class MainPanel():
         req = bytesToString(self.callbacks, reqResp.getRequest())
         resp = bytesToString(self.callbacks, reqResp.getResponse())
         tmpIssue = Issue(host=host, path=path, request=req, response=resp)
+        # add reqResp
+        tmpIssue.reqResp = reqResp
         # change the title to "New Issue from [TOOL]"?
         frameTitle = "New Issue from %s" % (burpToolName(invocation.getToolFlag()))
         frm = NewIssueDialog(callbacks=self.callbacks, issue=tmpIssue,

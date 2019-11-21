@@ -28,6 +28,7 @@ class NewIssueDialog(BugDialog):
                     severity=str(self.comboSeverity.getSelectedItem()),
                     request=self.panelRequest.getMessage(),
                     response=self.panelResponse.getMessage())
+        ist.reqResp = self.reqResp
         self.issue = ist
         self.setVisible(False)
     
@@ -60,3 +61,6 @@ class NewIssueDialog(BugDialog):
         # enable the template label and combobox
         self.labelTemplate.setVisible(True)
         self.comboTemplate.setVisible(True)
+
+        # add reqResp
+        self.reqResp = issue.reqResp

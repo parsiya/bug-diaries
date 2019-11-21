@@ -16,6 +16,7 @@ class Issue():
     # request and response will be stored as base64 encoded strings.
     request = ""  # type: str
     response = ""  # type: str
+    reqResp = "" # type: (IHttpRequestResponse)
 
     def getRequest(self):
         # type: () -> bytearray

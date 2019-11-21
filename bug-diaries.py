@@ -9,7 +9,7 @@ except ImportError:
 
 from burp import IBurpExtender
 # needed for tab
-from burp import ITab, IContextMenuFactory
+from burp import ITab, IContextMenuFactory, IMessageEditorController
 from Issue import Issue
 from java.awt.event import ActionListener
 
@@ -98,6 +98,24 @@ class BurpExtender(IBurpExtender, ITab, IContextMenuFactory):
         menuArray.add(customMenuItem)
 
         return menuArray
+    
+    # # implement IMessageEditorController
+    # # https://portswigger.net/burp/extender/api/burp/IMessageEditorController.html
+    # def getHttpService():
+    #     """This method is used to retrieve the HTTP service for the current
+    #     message."""
+    #     print "getHttpService()"
+    #     pass
+    
+    # def getRequest():
+    #     """This method is used to retrieve the HTTP request associated with the
+    #     current message (which may itself be a response)."""
+    #     pass
+    
+    # def getResponse():
+    #     """This method is used to retrieve the HTTP response associated with the
+    #     current message (which may itself be a request)."""
+    #     pass
 
 # support for burp-exceptions
 try:
