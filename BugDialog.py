@@ -44,7 +44,8 @@ class BugDialog(JDialog, IMessageEditorController):
         path="Path",
         description="Description",
         remediation="",
-        reqResp=RequestResponse(request="", response="")
+        reqResp=RequestResponse(request="default request",
+                                response="default response")
     )
 
     def loadPanel(self, issue):

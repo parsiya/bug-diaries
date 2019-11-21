@@ -18,7 +18,8 @@ class MainPanel():
         path="Path",
         description="Description",
         remediation="",
-        reqResp=RequestResponse(request="", response="")
+        reqResp=RequestResponse(request="default request",
+                                response="default response")
     )
 
     def loadPanel(self, issue):
@@ -122,7 +123,9 @@ class MainPanel():
         reqResp = invocation.getSelectedMessages()[0]
         host = str(reqResp.getHttpService())
         path = getPath(self.callbacks, reqResp)
-        tmpIssue = Issue(host=host, path=path, reqResp=reqResp)
+        convertedReqResp = RequestResponse()
+        convertedReqResp.fromIHttpRequestResponse(reqResp)
+        tmpIssue = Issue(host=host, path=path, reqResp=convertedReqResp)
         # change the title to "New Issue from [TOOL]"?
         frameTitle = "New Issue from %s" % (burpToolName(invocation.getToolFlag()))
         frm = NewIssueDialog(callbacks=self.callbacks, issue=tmpIssue,
@@ -130,6 +133,7 @@ class MainPanel():
                             #  , modality="application"
                              )
         frm.display(self)
+        # FOCUS!
         frm.requestFocus()
         # print self.callbacks.getHelpers().bytesToString(reqResp[0].getRequest())
 

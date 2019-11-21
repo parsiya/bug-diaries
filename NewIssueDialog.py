@@ -24,7 +24,10 @@ class NewIssueDialog(BugDialog):
         """Save the new issue."""
         tmpReqResp = RequestResponse(
             request=self.panelRequest.getMessage(),
-            response=self.panelResponse.getMessage()
+            response=self.panelResponse.getMessage(),
+            httpService=self.issue.reqResp.getHttpService(),
+            highlight=self.issue.reqResp.getHighlight(),
+            comment=self.issue.reqResp.getComment()
         )
         ist = Issue(name=self.textName.text, host=self.textHost.text,
                     path=self.textPath.text,
@@ -33,6 +36,8 @@ class NewIssueDialog(BugDialog):
                     severity=str(self.comboSeverity.getSelectedItem()),
                     reqResp=tmpReqResp)
         self.issue = ist
+        print "self.issue.reqResp.getRequest()", self.issue.reqResp.getRequest()
+        print "self.issue.reqResp.getHttpService()", self.issue.reqResp.getHttpService()
         self.setVisible(False)
     
     def componentHidden(self, event):

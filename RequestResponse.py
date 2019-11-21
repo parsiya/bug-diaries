@@ -1,6 +1,18 @@
 # Class implementing the IHttpService interface.
 # https://portswigger.net/burp/extender/api/burp/IHttpService.html
 
+import json
+
+class ComplexEncoder(json.JSONEncoder):
+    """Encoder class for (hopefully) serializing these nested objects to JSON.
+    """
+    def default(self, obj):
+        if hasattr(obj,'customJSON'):
+            return obj.customJSON()
+        else:
+            return json.JSONEncoder.default(self, obj)
+
+
 class HttpService():
     """Implements Burp's IHttpService interface."""
 
@@ -40,8 +52,15 @@ class HttpService():
     
     def __repr__(self):
         return self.__str__()
+    
+    def customJSON(self):
+        return dict(
+            host = self.host,
+            port = self.port,
+            protocol = self.protocol
+        ) 
 
-
+from base64 import b64decode, b64encode
 # Class implementing the IHttpRequestResponse interface.
 # https://portswigger.net/burp/extender/api/burp/IHttpRequestResponse.html
 
@@ -52,8 +71,8 @@ class RequestResponse():
                  highlight="", comment=""):
         # type: (bytearray, bytearray, HttpService, str, str) -> (RequestResponse)
         """Initialize a new RequestResponse object."""
-        self.request = request
-        self.response = response
+        self.setRequest(request)
+        self.setResponse(response)
         self.httpService = httpService
         self.highlight = highlight
         self.comment = comment
@@ -91,28 +110,34 @@ class RequestResponse():
     def getRequest(self):
         # type: () -> (bytearray)
         """Returns the request message."""
-        return self.request
+        return b64decode(self.request)
     
     def setRequest(self, request):
         # type: (bytearray) -> ()
         """Updates the request message."""
-        self.request = request
+        if request is not None:
+            self.request = b64encode(request)
+        else:
+            self.request = b64encode("")
     
     def getResponse(self):
         # type: () -> (bytearray)
         """Returns the response message."""
-        return self.response
+        return b64decode(self.response)
 
     def setResponse(self, response):
         # type: (bytearray) -> ()
         """Updates the response message."""
-        self.response = response
+        if response is not None:
+            self.response = b64encode(response)
+        else:
+            self.response = b64encode("")
     
     def JSON(self):
         # type: () -> (str)
         """Returns the RequestResponse in JSON."""
         import json
-        return json.dumps(self.__dict__, indent=2)
+        return json.dumps(self.__dict__, cls=ComplexEncoder, indent=2)
     
     def __str__(self):
         # type: () -> (str)
@@ -121,7 +146,30 @@ class RequestResponse():
     
     def __repr__(self):
         return self.__str__()
-
+    
+    def customJSON(self):
+        return dict(
+            request = self.getRequest(),
+            response = self.getResponse(),
+            httpService = self.httpService,
+            highlight = self.highlight,
+            comment = self.comment
+        )
+    
+    def fromIHttpRequestResponse(self, iHttpReqResp):
+        # type: (IHttpRequestResponse) -> ()
+        """Converts a Burp IHttpRequestResponse object to RequestResponse."""
+        myService = HttpService(
+            host=iHttpReqResp.getHttpService().getHost(),
+            port=iHttpReqResp.getHttpService().getPort(),
+            protocol=iHttpReqResp.getHttpService().getProtocol()
+        )
+        self.setRequest(iHttpReqResp.getRequest())
+        self.setResponse(iHttpReqResp.getResponse())
+        self.httpService = myService
+        self.highlight = iHttpReqResp.getHighlight()
+        self.comment = iHttpReqResp.getComment()
+    
 # this cannot be part of the class and is needed for the import later.
 def dictToRequestResponse(d):
     """Returns a RequestResponse from a dictionary."""

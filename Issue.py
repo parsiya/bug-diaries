@@ -52,11 +52,22 @@ class Issue():
         # json.dumps(self.__dict__) without the indent, it returns an error
         # that it's not serializable
         return json.dumps(self.__dict__, indent=2)
+    
+    def customJSON(self):
+        return dict(
+            name = self.name,
+            severity = self.severity,
+            host = self.host,
+            path = self.path,
+            description = self.description,
+            remediation = self.remediation,
+            reqResp = self.reqResp
+        )
 
-    def __str__(self):
-        # type: () -> (str)
-        """Stringer for the Issue object."""
-        return str(self.JSON())
+    # def __str__(self):
+    #     # type: () -> (str)
+    #     """Stringer for the Issue object."""
+    #     return str(self.JSON())
 
     # toString() does not work.
     # https://stackoverflow.com/a/6950800
