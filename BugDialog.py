@@ -137,17 +137,19 @@ class BugDialog(JDialog, IMessageEditorController):
     def getHttpService(self):
         """This method is used to retrieve the HTTP service for the current
         message."""
-        print 
+        print "self.issue.reqResp.getHttpService():", self.issue.reqResp.getHttpService()
         return self.issue.reqResp.getHttpService()
     
     def getRequest(self):
         """This method is used to retrieve the HTTP request associated with the
         current message (which may itself be a response)."""
+        print "self.issue.reqResp.getRequest():", self.issue.reqResp.getRequest()
         return self.issue.reqResp.getRequest()
     
     def getResponse(self):
         """This method is used to retrieve the HTTP response associated with the
         current message (which may itself be a request)."""
+        print "self.issue.reqResp.getResponse():", self.issue.reqResp.getResponse()
         return self.issue.reqResp.getResponse()
     
     def __init__(self, callbacks, issue=defaultIssue, title="", modality=""):

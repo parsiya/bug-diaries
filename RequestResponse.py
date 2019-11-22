@@ -149,8 +149,10 @@ class RequestResponse():
     
     def customJSON(self):
         return dict(
-            request = self.getRequest(),
-            response = self.getResponse(),
+            # request = self.getRequest(),
+            request = self.request,
+            # response = self.getResponse(),
+            response = self.response,
             httpService = self.httpService,
             highlight = self.highlight,
             comment = self.comment

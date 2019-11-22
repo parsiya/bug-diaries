@@ -6,8 +6,9 @@ from javax.swing import (JScrollPane, JTable, JPanel, JTextField, JLabel,
 from Issue import Issue
 from RequestResponse import RequestResponse
 from NewIssueDialog import NewIssueDialog
+from burp import IMessageEditorController
 
-class MainPanel():
+class MainPanel(IMessageEditorController):
     """Represents the converted frame from NetBeans."""
 
     # default issue to populate the panel with
@@ -31,6 +32,8 @@ class MainPanel():
         # check if the input is the correct object
         assert isinstance(issue, Issue)
 
+        # add selected issue to the panel to enable right-click stuff.
+        self.selectedIssue = issue
         # set textfields and textareas
         self.textName.text = issue.name
         self.textHost.text = issue.host
@@ -109,7 +112,47 @@ class MainPanel():
         fi = open(selectedFile.getAbsolutePath(), "r")
         # read the file and create a list of Issues
         import json
-        newIssues = json.load(fi, object_hook=dictToIssue)
+        # newIssues = json.load(fi, object_hook=dictToIssue)
+        # problem here is object_hook runs for every single object so newIssues
+        # will have internal objects, even if we tag them
+        
+        from RequestResponse import RequestResponse, HttpService
+        from base64 import b64decode
+        issuesArray = json.load(fi)
+        # now issuesArray is an array of dicts.
+        # manual JSON deserialization - move this to a method/function?
+        # also think about what happens if dictionaries are missing items
+        newIssues = list()
+        for eachissue in issuesArray:
+            # now we have each issue
+            # what if dictionaries are missing items?
+            ht = HttpService(
+                host = eachissue["reqResp"]["httpService"]["host"],
+                port = eachissue["reqResp"]["httpService"]["port"],
+                protocol = eachissue["reqResp"]["httpService"]["protocol"]
+            )
+            rr = RequestResponse(
+                request = b64decode(eachissue["reqResp"]["request"]),
+                response = b64decode(eachissue["reqResp"]["response"]),
+                comment = eachissue["reqResp"]["comment"],
+                highlight = eachissue["reqResp"]["highlight"],
+                httpService = ht
+            )
+            iss = Issue(
+                name = eachissue["name"],
+                severity = eachissue["severity"],
+                host = eachissue["host"],
+                path = eachissue["path"],
+                description = eachissue["description"],
+                remediation = eachissue["remediation"],
+                reqResp = rr
+            )
+
+            # iss = Issue()
+            # rr = RequestResponse()
+            # ht = HttpService()
+            newIssues.append(iss)
+
         # clear the table
         self.tableIssue.clear()
         # add the issues to the table
@@ -136,6 +179,36 @@ class MainPanel():
         # FOCUS!
         frm.requestFocus()
         # print self.callbacks.getHelpers().bytesToString(reqResp[0].getRequest())
+    
+    # implement IMessageEditorController
+    # https://portswigger.net/burp/extender/api/burp/IMessageEditorController.html
+    def getHttpService(self):
+        """This method is used to retrieve the HTTP service for the current
+        message."""
+        print "self.selectedIssue.reqResp.getHttpService():", self.selectedIssue.reqResp.getHttpService()
+        ht = self.selectedIssue.reqResp.getHttpService()
+        print "type(ht):", type(ht)
+        print "port:", ht.getPort()
+        print "type(getPort):", type(ht.getPort())
+        return self.selectedIssue.reqResp.getHttpService()
+    
+    def getRequest(self):
+        """This method is used to retrieve the HTTP request associated with the
+        current message (which may itself be a response)."""
+        # print "self.selectedIssue.reqResp.getRequest():", self.selectedIssue.reqResp.getRequest()
+        # return self.selectedIssue.reqResp.getRequest()
+        from org.python.core.util import StringUtil
+        req = self.selectedIssue.reqResp.getRequest()
+        return StringUtil.toBytes(req)
+    
+    def getResponse(self):
+        """This method is used to retrieve the HTTP response associated with the
+        current message (which may itself be a request)."""
+        # print "self.selectedIssue.reqResp.getResponse():", self.selectedIssue.reqResp.getResponse()
+        # return self.selectedIssue.reqResp.getResponse()
+        resp = self.selectedIssue.reqResp.getResponse()
+        from org.python.core.util import StringUtil
+        return StringUtil.toBytes(resp)
 
     # mostly converted generated code
     def __init__(self, callbacks, table=None):
@@ -158,8 +231,8 @@ class MainPanel():
         # put the textareas in JScrollPanes
         self.jsPaneDescription = JScrollPane(self.textAreaDescription)
         self.jsPaneRemediation = JScrollPane(self.textAreaRemediation)
-        self.panelRequest = self.callbacks.createMessageEditor(None, False)
-        self.panelResponse = self.callbacks.createMessageEditor(None, False)
+        self.panelRequest = self.callbacks.createMessageEditor(self, False)
+        self.panelResponse = self.callbacks.createMessageEditor(self, False)
 
         self.loadPanel(self.defaultIssue)
 

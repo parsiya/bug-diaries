@@ -110,12 +110,29 @@ def readFile(file):
 def dictToIssue(d):
     """Returns an Issue from a dictionary."""
     from Issue import Issue
+    from RequestResponse import RequestResponse, HttpService
     if d is None:
         return None
-    iss = Issue()
-    iss.__dict__.update(d)
-    # iss.__dict__ = d # would overwrite existing attributes
-    return iss
+    try:
+        if d["objtype"] is "httpservice":
+            ht = HttpService()
+            # should we remove the objtype key before thig assignment?
+            ht.__dict__.update(d)
+            return ht
+        if d["objtype"] is "requestresponse":
+            rr = RequestResponse()
+            rr.__dict__.update(d)
+            return rr
+        if d["objtype"] is "issue":
+            iss = Issue()
+            print "d", d
+            iss.__dict__.update(d)
+            # iss.__dict__ = d # would overwrite existing attributes
+            return iss
+    except:
+        pass
+    
+    return None
 
 def bytesToString(callbacks, b):
     # type: (bytearray) -> (str)
