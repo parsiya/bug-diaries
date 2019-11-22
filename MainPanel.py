@@ -201,8 +201,8 @@ class MainPanel():
         # put the textareas in JScrollPanes
         self.jsPaneDescription = JScrollPane(self.textAreaDescription)
         self.jsPaneRemediation = JScrollPane(self.textAreaRemediation)
-        self.panelRequest = self.callbacks.createMessageEditor(self, False)
-        self.panelResponse = self.callbacks.createMessageEditor(self, False)
+        self.panelRequest = self.callbacks.createMessageEditor(None, False)
+        self.panelResponse = self.callbacks.createMessageEditor(None, False)
 
         self.loadPanel(self.defaultIssue)
 

@@ -165,8 +165,8 @@ class BugDialog(JDialog):
         # put the textareas in JScrollPanes
         self.jsPaneDescription = JScrollPane(self.textAreaDescription)
         self.jsPaneRemediation = JScrollPane(self.textAreaRemediation)
-        self.panelRequest = callbacks.createMessageEditor(self, True)
-        self.panelResponse = callbacks.createMessageEditor(self, True)
+        self.panelRequest = callbacks.createMessageEditor(None, True)
+        self.panelResponse = callbacks.createMessageEditor(None, True)
         self.textName = JTextField()
         self.textHost = JTextField()
         self.textPath = JTextField()
@@ -242,7 +242,7 @@ class BugDialog(JDialog):
                                                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                     .addComponent(self.textPath))
                                                 .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                                    .addComponent(self.textName, GroupLayout.PREFERRED_SIZE, 620, GroupLayout.PREFERRED_SIZE)
+                                                    .addComponent(self.textName)
                                                     .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                                     .addComponent(self.labelSeverity)
                                                     .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
@@ -308,9 +308,9 @@ class BugDialog(JDialog):
         """
         templateFile = "data\\templates-cwe-1200.json"
         fi = open(templateFile, "r")
-        from Utils import dictToIssue
+        from Utils import templateToIssue
         import json
-        templateIssues = json.load(fi, object_hook=dictToIssue)
+        templateIssues = json.load(fi, object_hook=templateToIssue)
         self.templateIssues = templateIssues
         # templateNames = [t.name for t in self.templateIssues]
         for t in self.templateIssues:
