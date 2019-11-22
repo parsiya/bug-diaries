@@ -36,8 +36,8 @@ class NewIssueDialog(BugDialog):
                     severity=str(self.comboSeverity.getSelectedItem()),
                     reqResp=tmpReqResp)
         self.issue = ist
-        print "self.issue.reqResp.getRequest()", self.issue.reqResp.getRequest()
-        print "self.issue.reqResp.getHttpService()", self.issue.reqResp.getHttpService()
+        # print "self.issue.reqResp.getRequest()", self.issue.reqResp.getRequest()
+        # print "self.issue.reqResp.getHttpService()", self.issue.reqResp.getHttpService()
         self.setVisible(False)
     
     def componentHidden(self, event):
