@@ -103,7 +103,7 @@ class MainPanel():
             # if there is not a last used directory in the settings, continue
             pass
         
-        from Utils import openFileDialog, dictToIssue
+        from Utils import openFileDialog
         selectedFile, usedDirectory = openFileDialog(parent=self.panel,
             startingDir=lastDir, title="Import Issues", extension="json")
         
