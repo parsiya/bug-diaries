@@ -7,7 +7,6 @@ from javax.swing import (LayoutStyle, JTextField, JTabbedPane, WindowConstants,
 from Issue import Issue
 from RequestResponse import RequestResponse
 from java.awt.event import ComponentListener
-from burp import IMessageEditorController
 
 
 class DialogListener(ComponentListener):
@@ -33,7 +32,7 @@ class DialogListener(ComponentListener):
         pass
 
 
-class BugDialog(JDialog, IMessageEditorController):
+class BugDialog(JDialog):
     """Represents the dialog."""
 
     # default issue to populate the panel with
@@ -132,26 +131,6 @@ class BugDialog(JDialog, IMessageEditorController):
         Inheriting classes must implement this."""
         pass
 
-    # implement IMessageEditorController
-    # https://portswigger.net/burp/extender/api/burp/IMessageEditorController.html
-    def getHttpService(self):
-        """This method is used to retrieve the HTTP service for the current
-        message."""
-        print "self.issue.reqResp.getHttpService():", self.issue.reqResp.getHttpService()
-        return self.issue.reqResp.getHttpService()
-    
-    def getRequest(self):
-        """This method is used to retrieve the HTTP request associated with the
-        current message (which may itself be a response)."""
-        print "self.issue.reqResp.getRequest():", self.issue.reqResp.getRequest()
-        return self.issue.reqResp.getRequest()
-    
-    def getResponse(self):
-        """This method is used to retrieve the HTTP response associated with the
-        current message (which may itself be a request)."""
-        print "self.issue.reqResp.getResponse():", self.issue.reqResp.getResponse()
-        return self.issue.reqResp.getResponse()
-    
     def __init__(self, callbacks, issue=defaultIssue, title="", modality=""):
         """Constructor, populates the dialog."""
         # set the title

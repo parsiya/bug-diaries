@@ -6,9 +6,9 @@ from javax.swing import (JScrollPane, JTable, JPanel, JTextField, JLabel,
 from Issue import Issue
 from RequestResponse import RequestResponse
 from NewIssueDialog import NewIssueDialog
-from burp import IMessageEditorController
 
-class MainPanel(IMessageEditorController):
+
+class MainPanel():
     """Represents the converted frame from NetBeans."""
 
     # default issue to populate the panel with
@@ -180,36 +180,6 @@ class MainPanel(IMessageEditorController):
         frm.requestFocus()
         # print self.callbacks.getHelpers().bytesToString(reqResp[0].getRequest())
     
-    # implement IMessageEditorController
-    # https://portswigger.net/burp/extender/api/burp/IMessageEditorController.html
-    def getHttpService(self):
-        """This method is used to retrieve the HTTP service for the current
-        message."""
-        print "self.selectedIssue.reqResp.getHttpService():", self.selectedIssue.reqResp.getHttpService()
-        ht = self.selectedIssue.reqResp.getHttpService()
-        print "type(ht):", type(ht)
-        print "port:", ht.getPort()
-        print "type(getPort):", type(ht.getPort())
-        return self.selectedIssue.reqResp.getHttpService()
-    
-    def getRequest(self):
-        """This method is used to retrieve the HTTP request associated with the
-        current message (which may itself be a response)."""
-        # print "self.selectedIssue.reqResp.getRequest():", self.selectedIssue.reqResp.getRequest()
-        # return self.selectedIssue.reqResp.getRequest()
-        from org.python.core.util import StringUtil
-        req = self.selectedIssue.reqResp.getRequest()
-        return StringUtil.toBytes(req)
-    
-    def getResponse(self):
-        """This method is used to retrieve the HTTP response associated with the
-        current message (which may itself be a request)."""
-        # print "self.selectedIssue.reqResp.getResponse():", self.selectedIssue.reqResp.getResponse()
-        # return self.selectedIssue.reqResp.getResponse()
-        resp = self.selectedIssue.reqResp.getResponse()
-        from org.python.core.util import StringUtil
-        return StringUtil.toBytes(resp)
-
     # mostly converted generated code
     def __init__(self, callbacks, table=None):
 
