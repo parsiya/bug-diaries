@@ -74,4 +74,4 @@ I cannot debug it, I will probably rewrite the extension in Java.
 Please make a github issue.
 
 # License
-GPLv3. I will probably switch to MIT anyways.
+GPLv3, see [LICENSE](LICENSE) for details. I will probably switch to MIT later.
