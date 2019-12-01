@@ -151,8 +151,8 @@ class IssueTableModel(AbstractTableModel):
         # type: () -> (str)
         """Returns a JSON array of all issues."""
         from RequestResponse import ComplexEncoder
-        for iss in self.issues:
-            return json.dumps([iss.customJSON() for iss in self.issues],
+        # for iss in self.issues:
+        return json.dumps([iss.customJSON() for iss in self.issues],
                                cls=ComplexEncoder, indent=2)
         # return json.dumps([iss.__dict__ for iss in self.issues], indent=2)
     
