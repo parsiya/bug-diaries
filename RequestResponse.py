@@ -13,7 +13,8 @@ class ComplexEncoder(json.JSONEncoder):
             return json.JSONEncoder.default(self, obj)
 
 
-class HttpService():
+from burp import IHttpService
+class HttpService(IHttpService):
     """Implements Burp's IHttpService interface."""
 
     def __init__(self, host="", port=0, protocol=""):
@@ -64,7 +65,8 @@ from base64 import b64decode, b64encode
 # Class implementing the IHttpRequestResponse interface.
 # https://portswigger.net/burp/extender/api/burp/IHttpRequestResponse.html
 
-class RequestResponse():
+from burp import IHttpRequestResponse
+class RequestResponse(IHttpRequestResponse):
     """Implements Burp's IHttpRequestResponse interface."""
 
     def __init__(self, request=None, response=None, httpService=None,
