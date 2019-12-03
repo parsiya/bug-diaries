@@ -14,7 +14,7 @@ the Java version has more capabilities. See the Python version inside
 
 1. Add the pre-built jar file at [release/BugDiaries-all.jar](release/BugDiaries-all.jar).
 
-## Building Your The Jar File
+## Building The Extension
 
 1. Clone the repository.
 2. Setup Open JDK 11.
@@ -105,4 +105,4 @@ A lot. See Github issues for som planned features.
 Please make a Github issue.
 
 # License
-GPLv3, see [LICENSE](LICENSE) for details. I will probably switch to MIT later.
+GPLv3, see [LICENSE](LICENSE) for details
