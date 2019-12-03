@@ -1,0 +1,17 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "BurpExtension",
+            "request": "attach",
+            "hostName": "localhost",
+            "port": 8000
+        }
+    ]
+    // How to run Burp
+    // java -agentlib:jdwp=transport=dt_socket,address=localhost:8000,server=y,suspend=n -jar "C:\Program Files\BurpSuiteCommunity\burpsuite_community.jar"
+}

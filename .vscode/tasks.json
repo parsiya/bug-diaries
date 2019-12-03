@@ -1,0 +1,26 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "gradle",
+            "type": "shell",
+            "command": "gradle bigjar",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "bigjar",
+            "type": "shell",
+            "command": "gradle bigjar"
+        },
+        { // We are using gson now, so this is not useful anymore.
+            "label": "build",
+            "type": "shell",
+            "command": "gradle build"
+        }
+    ]
+}
