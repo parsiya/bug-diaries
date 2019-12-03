@@ -25,7 +25,7 @@ __pycache__/
 ## Package Files #
 *.jar
 ## Exclude the final build file
-!release/BugDiaries-full.jar
+!release/BugDiaries-all.jar
 ## Exclude gradle wrapper
 !gradle/wrapper/gradle-wrapper.jar
 *.war
