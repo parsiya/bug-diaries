@@ -38,17 +38,24 @@ public class MainDiary {
     public static byte[] emptyBytes = "".getBytes();
 
     // Default bug to populate the panels.
-    public static Bug defaultBug = new Bug.Builder("Name").severity("High").host("Host").path("Path")
+    public static Bug defaultBug =
+        new Bug.Builder("Name").severity("High").host("Host").path("Path")
             .description("Description").remediation("Remediation").build();
 
     // Table columns
-    public static String[] columnStrings = new String[] { "Name", "Severity", "Host", "Path" };
+    public static String[] columnStrings = new String[] {
+        "Name", "Severity", "Host", "Path"
+    };
 
-    public static Class[] classes = new Class[] { java.lang.String.class, java.lang.String.class,
-            java.lang.String.class, java.lang.String.class };
+    public static Class[] classes = new Class[] {
+        java.lang.String.class, java.lang.String.class,
+        java.lang.String.class, java.lang.String.class
+    };
 
     // Severity combobox
-    public static String[] severities = new String[] { "Critical", "High", "Medium", "Low", "Info" };
+    public static String[] severities = new String[] {
+        "High", "Medium", "Low", "Information"
+    };
 
     /**
      * Prints the String s to standard output.
