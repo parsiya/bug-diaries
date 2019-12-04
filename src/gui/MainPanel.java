@@ -9,9 +9,11 @@ import java.lang.reflect.Type;
 
 import java.awt.Color;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
+import java.io.File;
 import java.util.ArrayList;
+
 
 import burp.IHttpService;
 import burp.IMessageEditor;
@@ -243,6 +245,21 @@ public class MainPanel implements IMessageEditorController {
             }
         });
 
+        buttonReport = new JButton("Generate Report");
+        buttonReport.setToolTipText("Generate a report from your bugs!");
+        buttonReport.addActionListener(event -> {
+            try {
+                print("Generating a report - set a breakpoint here for debugging!");
+                // Get all issues in the table.
+                Bug[] bugs = bugTable.getBugs().toArray(new Bug[bugTable.getBugs().size()]);
+                File wf = MainDiary.saveFile(MainDiary.mainPanel.panel, "", "Select report file", "");
+
+                callbacks.generateScanReport("HTML", bugs, wf);
+            } catch (Exception e) {
+                MainDiary.printStackTraceString(e);
+            }
+        });
+
         bugTable = new BugTable();
         // Wrap the table in a scrollpane.
         jScrollPane1.setViewportView(bugTable);
@@ -316,11 +333,12 @@ public class MainPanel implements IMessageEditorController {
                         .addGroup(jPanel1Layout.createSequentialGroup().addComponent(buttonNewBug)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED).addComponent(buttonDeleteBug)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED).addComponent(buttonImport)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED).addComponent(buttonExport)));
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED).addComponent(buttonExport)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED).addComponent(buttonReport)));
 
         // Link the size of buttons together.
         jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, buttonDeleteBug, buttonExport, buttonImport,
-                buttonNewBug);
+                buttonNewBug, buttonReport);
 
         jPanel1Layout.setVerticalGroup(jPanel1Layout.createParallelGroup().addGroup(jPanel1Layout
                 .createSequentialGroup().addContainerGap()
@@ -340,7 +358,7 @@ public class MainPanel implements IMessageEditorController {
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(tabBug)
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup().addComponent(buttonNewBug).addComponent(buttonDeleteBug)
-                        .addComponent(buttonImport).addComponent(buttonExport))
+                        .addComponent(buttonImport).addComponent(buttonExport).addComponent(buttonReport))
                 .addContainerGap()));
 
         // Create the main panel.
@@ -375,5 +393,6 @@ public class MainPanel implements IMessageEditorController {
     private JButton buttonDeleteBug;
     private JButton buttonImport;
     private JButton buttonExport;
+    private JButton buttonReport;
     // End of variables declaration
 }
