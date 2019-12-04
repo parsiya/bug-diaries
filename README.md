@@ -19,20 +19,20 @@ the Java version has more capabilities. See the Python version inside
 1. Clone the repository.
 2. Setup Open JDK 11.
 3. Setup Gradle.
-    1. Use the instructions at: https://gradle.org/install/; Or
-    2. Run the following command to get the binary:
-        1. *nix: `./gradlew wrapper --gradle-version=6.0.1 --distribution-type=bin`
-        2. Windows: `gradlew.bat wrapper --gradle-version=6.0.1 --distribution-type=bin`
-4. Run `gradle bigjar`
-5. The newly built jar file will be at [release/BugDiaries-all.jar](release/BugDiaries-all.jar).
-6. Optionally, open the directory in Visual Studio Code and use `Ctrl+Shift+B`.
+    1. Use the instructions at: https://gradle.org/install/
+4. If you prefer the Wrapper:
+    1. *nix: `./gradlew wrapper --gradle-version=6.0.1 --distribution-type=bin`
+    2. Windows: `gradlew.bat wrapper --gradle-version=6.0.1 --distribution-type=bin`
+5. Run `gradle bigjar` or `gradlew[.bat] bigjar` (if you use the Wrapper).
+6. The newly built jar file will be at [release/BugDiaries-all.jar](release/BugDiaries-all.jar).
 
+## Development
 For more information about my development process (and debugging Burp
 extensions), please see the following blog post:
 
 * https://parsiya.net/blog/2019-12-02-developing-and-debugging-java-burp-extensions-with-visual-studio-code/
 
-# Capabilities
+# Features
 
 ## Adding a New Bug
 
@@ -97,12 +97,8 @@ The JSON file can be imported again.
 # TODO
 A lot. See Github issues for som planned features.
 
-1. Create an HTML report similar to Burp from the bugs in the extension.
-2. Convert a Burp Scan item to a bug in the extension and vice versa.
-    1. Only the pro version of Burp has the this feature.
-
 # Bugs
 Please make a Github issue.
 
 # License
-GPLv3, see [LICENSE](LICENSE) for details
+GPLv3, see [LICENSE](LICENSE) for details.

@@ -6,21 +6,12 @@
         {
             "label": "gradle",
             "type": "shell",
-            "command": "gradle bigjar",
+            // Using the wrapper instead of 
+            "command": "gradlew.bat bigjar",
             "group": {
                 "kind": "build",
                 "isDefault": true
             }
-        },
-        {
-            "label": "bigjar",
-            "type": "shell",
-            "command": "gradle bigjar"
-        },
-        { // We are using gson now, so this is not useful anymore.
-            "label": "build",
-            "type": "shell",
-            "command": "gradle build"
         }
     ]
 }
