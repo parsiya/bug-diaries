@@ -121,7 +121,7 @@ public class Bug {
 
     /**
      * Sets the Bug's response.
-     * @param response byte[] cotaining the response.
+     * @param response byte[] containing the response.
      */
     public void setResponse(byte[] response) {
         requestResponse.setResponse(response);
