@@ -24,9 +24,9 @@ public class test {
                     ("request"+num).getBytes(), ("response"+num).getBytes(), srv
                 )
                 .build();
-            Bug tmpBug = new Bug.Builder("name"+num).severity("severity"+num)
+            Bug tmpBug = new Bug.Builder("name"+num).severity("High")
                 .host("host"+num).path("path"+num).description("description"+num)
-                .remediation("remediation"+num)
+                .remediation("remediation"+num).confidence("Firm")
                 .requestResponse(reqResp)
                 .build();
             iss.add(tmpBug);

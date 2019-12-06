@@ -52,9 +52,15 @@ public class MainDiary {
         java.lang.String.class, java.lang.String.class
     };
 
-    // Severity combobox
+    // Severity levels
+    // These are case-sensitive.
     public static String[] severities = new String[] {
         "High", "Medium", "Low", "Information"
+    };
+
+    // Confidence levels
+    public static String[] confidence = new String[] {
+        "Certain", "Firm", "Tentative"
     };
 
     /**

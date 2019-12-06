@@ -256,7 +256,7 @@ public class MainPanel implements IMessageEditorController {
 
                 callbacks.generateScanReport("HTML", bugs, wf);
             } catch (Exception e) {
-                MainDiary.printStackTraceString(e);
+                e.printStackTrace();
             }
         });
 
