@@ -13,8 +13,9 @@ dependencies {
 sourceSets {
     main {
         java {
-            // https://stackoverflow.com/a/15411137
             srcDir 'src'
+            // Buildship fix: https://bugs.eclipse.org/bugs/show_bug.cgi?id=504012
+            exclude 'resources/'
         }
         resources {
             srcDir 'src/resources'
@@ -22,7 +23,7 @@ sourceSets {
     }
 }
 
-libsDirName = "../release"
+libsDirName = '../release'
 
 task bigJar(type: Jar) {
     baseName = project.name + '-all'
