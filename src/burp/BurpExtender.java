@@ -7,16 +7,12 @@ package burp;
 import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.swing.JMenuItem;
 import javax.swing.SwingUtilities;
-
-// import gui.BugFrame;
 import gui.MainPanel;
 import gui.NewBugFrame;
 import bug.test;
 import bug.Bug;
-
 import burp.impl.RequestResponse;
 
 public class BurpExtender implements IBurpExtender, ITab, IContextMenuFactory {
@@ -29,19 +25,18 @@ public class BurpExtender implements IBurpExtender, ITab, IContextMenuFactory {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                // Start test
-                // Add some bugs to the table.
-
-                try {
-                    ArrayList<Bug> iss = test.makeBugs(3);
-                    // for (Bug bug : iss) {
-                    // MainDiary.printOutput(bug.toString());
-                    // }
-                    MainDiary.mainPanel = new MainPanel(iss);
-                } catch (Exception e) {
-                    MainDiary.print(e.toString());
-                }
-                // End test
+                // // Start test
+                // // Add some bugs to the table.
+                // try {
+                //     ArrayList<Bug> iss = test.makeBugs(3);
+                //     // for (Bug bug : iss) {
+                //     // MainDiary.printOutput(bug.toString());
+                //     // }
+                //     MainDiary.mainPanel = new MainPanel(iss);
+                // } catch (Exception e) {
+                //     MainDiary.print(e.toString());
+                // }
+                // // End test
                 callbacks.registerContextMenuFactory(BurpExtender.this);
                 callbacks.addSuiteTab(BurpExtender.this);
             }
@@ -63,7 +58,7 @@ public class BurpExtender implements IBurpExtender, ITab, IContextMenuFactory {
      */
     @Override
     public List<JMenuItem> createMenuItems(IContextMenuInvocation invocation) {
-        JMenuItem menu1 = new JMenuItem("Make Custom Bug");
+        JMenuItem menu1 = new JMenuItem("Send to Bug Diaries");
         menu1.addActionListener(event -> {
             MainDiary.print("Clicked context menu item");
             // Get the first selected message.
