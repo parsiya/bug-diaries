@@ -36,7 +36,7 @@ extensions), please see the following blog post:
 
 ## Adding a New Bug
 
-1. Right click on any request and select `Make Custom Bug`.
+1. Right click on any request and select `Send to Bug Diaries`.
     * Every tab that supports context menus in Burp works. E.g., Target, Proxy,
     and Repeater.
 2. A new frame pops up with the request, response, host, and path (based on the
