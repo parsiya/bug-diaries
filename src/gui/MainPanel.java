@@ -49,7 +49,6 @@ public class MainPanel implements IMessageEditorController {
         initComponents();
         // This doesn't seem to be working.
         bugTable = table;
-        // TODO: Will this backfire? Seems to be working.
         MainDiary.table = bugTable;
     }
 
@@ -61,7 +60,6 @@ public class MainPanel implements IMessageEditorController {
     public MainPanel(ArrayList<Bug> bugs) {
         initComponents();
         bugTable.populate(bugs);
-        // TODO: Will this backfire? Seems to be working.
         MainDiary.table = bugTable;
     }
 
@@ -132,9 +130,6 @@ public class MainPanel implements IMessageEditorController {
         jsPaneRemediation = new JScrollPane(textAreaRemediation);
         panelRequest = callbacks.createMessageEditor(this, false);
         panelResponse = callbacks.createMessageEditor(this, false);
-        // TODO: Remove after right-click menu works properly.
-        // panelRequest = callbacks.createMessageEditor(null, false);
-        // panelResponse = callbacks.createMessageEditor(null, false);
 
         // Buttons and their actions.
         buttonNewBug = new JButton("New Bug");
@@ -179,7 +174,6 @@ public class MainPanel implements IMessageEditorController {
                     // Read the file.
                     importStr = MainDiary.readFile(openFile);
                 } catch (Exception e) {
-                    // TODO: Print some error message and return.
                     MainDiary.printStackTraceString(e);
                     return;
                 }
@@ -210,7 +204,7 @@ public class MainPanel implements IMessageEditorController {
                 print("Export clicked!");
                 // Convert all bugs to JSON.
                 String jsoned = new Gson().toJson(bugTable.getBugs());
-                // TODO: To prettyprint use this Gson object.
+                // To prettyprint use this Gson object.
                 // Gson gson = new GsonBuilder().setPrettyPrinting().create();
                 // Use the last used directory if it was saved.
                 String lastDir = callbacks.loadExtensionSetting("lastDir");

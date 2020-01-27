@@ -81,8 +81,6 @@ public class NewBugFrame extends BugFrame {
     protected Bug getBug() {
         // If we are creating a new bug without using the contextmenu, the
         // currentBug.requestReponse is null.
-        // TODO: When getting the requestResponse from the contextmenu, add it
-        // to currentBug.
         HttpService srv;
         if (currentBug.requestResponse == null) {
             // New bug without using the context menu.

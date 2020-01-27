@@ -113,7 +113,6 @@ public class BugFrame implements IMessageEditorController {
                 .host(textHost.getText()).path(textPath.getText()).description(textAreaDescription.getText())
                 .remediation(textAreaRemediation.getText())
                 // TODO: We have to account for modified requestResponse.
-                // TODO: implement RequestResponse and HttpService interfaces.
                 .requestResponse(currentBug.requestResponse).build();
         return selectedBug;
     }
@@ -183,8 +182,6 @@ public class BugFrame implements IMessageEditorController {
         // Template
         labelTemplate = new JLabel("Template");
         comboTemplate = new JComboBox<Template>();
-        // // TODO: Populate it with template values.
-        // comboTemplate.setModel(new DefaultComboBoxModel<String>(MainDiary.severities));
 
         // Description textarea
         textAreaDescription = new JTextArea();
@@ -202,9 +199,6 @@ public class BugFrame implements IMessageEditorController {
         jsPaneRemediation = new JScrollPane(textAreaRemediation);
 
         // Request IMessageEditor
-        // TODO: Remove these after we are sure the controller works.
-        // panelRequest = callbacks.createMessageEditor(null, true);
-        // panelResponse = callbacks.createMessageEditor(null, true);
         panelRequest = callbacks.createMessageEditor(this, true);
         panelResponse = callbacks.createMessageEditor(this, true);
 
