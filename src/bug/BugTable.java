@@ -1,6 +1,10 @@
 package bug;
 
+import javax.swing.AbstractAction;
+import java.awt.event.ActionEvent;
 import javax.swing.JTable;
+import javax.swing.KeyStroke;
+
 import java.util.ArrayList;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -42,6 +46,16 @@ public class BugTable extends JTable implements MouseListener {
         setModel(model);
         // Add the class as MouseListener.
         addMouseListener(this);
+
+        // Add keybinding for DELETE. It should delete the selected row.
+        getInputMap().put(KeyStroke.getKeyStroke("DELETE"), "DeleteSelectedBug");
+        getActionMap().put("DeleteSelectedBug", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                removeSelectedBug();
+            }
+        });
+
+        
     }
 
     /**
@@ -90,6 +104,13 @@ public class BugTable extends JTable implements MouseListener {
         if (lastRow >= 0) {
             setRowSelectionInterval(lastRow, lastRow);
         }
+    }
+
+    /**
+     * Removes the currently selected bug from the table.
+     */
+    public void removeSelectedBug() {
+        removeBug(getTableSelectedRow());
     }
 
     /**

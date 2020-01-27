@@ -151,7 +151,7 @@ public class MainPanel implements IMessageEditorController {
         buttonDeleteBug.addActionListener(event -> {
             print("The only good bug is a dead bug!");
             // Get selected index and remove it.
-            bugTable.removeBug(bugTable.getTableSelectedRow());
+            bugTable.removeSelectedBug();
         });
 
         buttonImport = new JButton("Import");
