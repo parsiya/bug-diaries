@@ -37,6 +37,7 @@ public class BurpExtender implements IBurpExtender, ITab, IContextMenuFactory {
                 //     MainDiary.print(e.toString());
                 // }
                 // // End test
+                MainDiary.mainPanel = new MainPanel();
                 callbacks.registerContextMenuFactory(BurpExtender.this);
                 callbacks.addSuiteTab(BurpExtender.this);
             }

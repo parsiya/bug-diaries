@@ -54,8 +54,6 @@ public class BugTable extends JTable implements MouseListener {
                 removeSelectedBug();
             }
         });
-
-        
     }
 
     /**

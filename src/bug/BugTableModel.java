@@ -25,11 +25,11 @@ public class BugTableModel extends AbstractTableModel{
 
     /**
      * Creates and populates a new BugTable.
-     * @param bugs ArrayList of Bugs that will populate the model.
+     * @param newBugs ArrayList of Bugs that will populate the model.
      */
-    public BugTableModel(ArrayList<Bug> bugs) {
+    public BugTableModel(ArrayList<Bug> newBugs) {
         initTableModel();
-        populate(bugs);
+        populate(newBugs);
     }
 
     /**

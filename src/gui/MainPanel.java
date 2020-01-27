@@ -38,6 +38,9 @@ public class MainPanel implements IMessageEditorController {
      */
     public MainPanel() {
         initComponents();
+        bugTable = new BugTable();
+        MainDiary.table = bugTable;
+        jScrollPane1.setViewportView(bugTable);
     }
 
     /**
@@ -47,9 +50,14 @@ public class MainPanel implements IMessageEditorController {
      */
     public MainPanel(BugTable table) {
         initComponents();
-        // This doesn't seem to be working.
+        // This doesn't seem to be working. It's because we were creating an
+        // instance of bugtable and setting it to jsScrollPane1 in
+        // initComponent(), so this new bugtable is basically a new table and
+        // the old one is displayed in jScrollPane1.
+
         bugTable = table;
         MainDiary.table = bugTable;
+        jScrollPane1.setViewportView(bugTable);
     }
 
     /**
@@ -61,6 +69,7 @@ public class MainPanel implements IMessageEditorController {
         initComponents();
         bugTable.populate(bugs);
         MainDiary.table = bugTable;
+        jScrollPane1.setViewportView(bugTable);
     }
 
     /**
@@ -237,9 +246,10 @@ public class MainPanel implements IMessageEditorController {
             }
         });
 
-        bugTable = new BugTable();
-        // Wrap the table in a scrollpane.
-        jScrollPane1.setViewportView(bugTable);
+        // Moved to the constructor.
+        // bugTable = new BugTable();
+        // // Wrap the table in a scrollpane.
+        // jScrollPane1.setViewportView(bugTable);
 
         // Top panel with the table.
         jPanel1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0)));
