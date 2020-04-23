@@ -1,6 +1,5 @@
 # Frame to edit an issue.
 
-from java.awt.event import ComponentListener
 from Issue import Issue
 from RequestResponse import RequestResponse
 from BugDialog import BugDialog

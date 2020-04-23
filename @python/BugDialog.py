@@ -1,9 +1,8 @@
 # Base frame for creating and editing issues.
 
-from javax.swing import (LayoutStyle, JTextField, JTabbedPane, WindowConstants,
-                         JTextField, JButton, JSplitPane, JComboBox, JLabel,
-                         JDialog, GroupLayout, JTextArea, BorderFactory, 
-                         JScrollPane)
+from javax.swing import (LayoutStyle, JTextField, JTabbedPane, JTextField,
+                         JButton, JComboBox, JLabel, JDialog, GroupLayout,
+                         JTextArea, JScrollPane)
 from Issue import Issue
 from RequestResponse import RequestResponse
 from java.awt.event import ComponentListener

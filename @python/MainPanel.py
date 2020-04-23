@@ -1,8 +1,8 @@
 # The converted GUI from NetBeans.
 
-from javax.swing import (JScrollPane, JTable, JPanel, JTextField, JLabel,
-                         JTabbedPane, table, BorderFactory, GroupLayout,
-                         LayoutStyle, JFrame, JTextArea, JSplitPane, JButton)
+from javax.swing import (JScrollPane, JPanel, JTextField, JLabel, JTabbedPane,
+                         BorderFactory, GroupLayout, LayoutStyle, JTextArea,
+                         JSplitPane, JButton)
 from Issue import Issue
 from RequestResponse import RequestResponse
 from NewIssueDialog import NewIssueDialog

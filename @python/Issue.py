@@ -1,5 +1,4 @@
 # Each Issue contains the information for one finding.
-from base64 import b64decode, b64encode
 from RequestResponse import RequestResponse
 
 class Issue():

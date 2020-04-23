@@ -43,7 +43,6 @@ class HttpService(IHttpService):
     def JSON(self):
         # type: () -> (str)
         """Returns the HttpService in JSON."""
-        import json
         return json.dumps(self.__dict__, indent=2)
     
     def __str__(self):
@@ -138,7 +137,6 @@ class RequestResponse(IHttpRequestResponse):
     def JSON(self):
         # type: () -> (str)
         """Returns the RequestResponse in JSON."""
-        import json
         return json.dumps(self.__dict__, cls=ComplexEncoder, indent=2)
     
     def __str__(self):
