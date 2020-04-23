@@ -16,11 +16,10 @@ public class EditBugFrame extends BugFrame {
     }
 
     /**
-     * Creates a new fram to edit the bug.
+     * Creates a new frame to edit the bug.
      * @param parentFrame Parent frame that has invoked this dialog.
      * @param title
      * @param bug
-     * @param selectedRow
      */
     public EditBugFrame(Component parentFrame, String title, Bug bug) {
         super(parentFrame, title, bug);

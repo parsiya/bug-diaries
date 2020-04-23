@@ -172,7 +172,7 @@ public class MainDiary {
         toolMap.put(2, "Target");
         toolMap.put(4, "Proxy");
         toolMap.put(8, "Spider");
-        toolMap.put(16, "Scannner");
+        toolMap.put(16, "Scanner");
         toolMap.put(32, "Intruder");
         toolMap.put(64, "Repeater");
         toolMap.put(128, "Sequencer");
@@ -195,6 +195,7 @@ public class MainDiary {
             buf.append(tmpStr);
         }
         in.close();
+        reader.close();
         return buf.toString();
     }
 
